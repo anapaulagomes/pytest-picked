@@ -19,11 +19,7 @@ def pytest_collection_modifyitems(session, items, config):
         return
 
     picked_files, picked_folders = _afected_tests()
-
-    tw = _pytest.config.create_terminal_writer(config)
-    tw.line()
-    tw.line(f"Afected test files... {len(picked_files)}. {picked_files}")
-    tw.line(f"Afected test folders... {len(picked_folders)}. {picked_folders}")
+    _display_afected_tests(config, picked_files, picked_folders)
 
     to_be_tested = []
     for index, item in enumerate(items):
@@ -37,19 +33,30 @@ def pytest_collection_modifyitems(session, items, config):
     items[:] = to_be_tested
 
 
+def _display_afected_tests(config, files, folders):
+    tw = _pytest.config.create_terminal_writer(config)
+    tw.line()
+    message = "Changed test {}... {}. {}"
+    files_msg = message.format("files", len(files), files)
+    folders_msg = message.format("folders", len(folders), folders)
+    tw.line(files_msg)
+    tw.line(folders_msg)
+
+
 def _afected_tests():
     REGEX_FILES = r"\S+.(.*.py)"  # r'(\S+.test_\S+.py)'
     REGEX_FOLDERS = r"\S+.(.*\/)\n"
     raw_output = _get_git_status()
     files = re.findall(REGEX_FILES, raw_output)
     folders = re.findall(REGEX_FOLDERS, raw_output)
-    files = [file for file in files if "test" in file]
-    folders = [folder for folder in folders if "test" in folder]
+    files = [file.strip() for file in files if "test" in file]
+    folders = [folder.strip() for folder in folders if "test" in folder]
     return files, folders
 
 
 def _get_git_status():
-    output = subprocess.run(["git", "status", "--short"], stdout=subprocess.PIPE)
+    command = ["git", "status", "--short"]
+    output = subprocess.run(command, stdout=subprocess.PIPE)
     return output.stdout.decode("utf-8")
 
 
