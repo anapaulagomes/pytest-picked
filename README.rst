@@ -1,21 +1,13 @@
 ===============
-picked
+pytest-picked
 ===============
 
-.. image:: https://img.shields.io/pypi/v/picked.svg
-    :target: https://pypi.org/project/picked
-    :alt: PyPI version
-
-.. image:: https://img.shields.io/pypi/pyversions/picked.svg
-    :target: https://pypi.org/project/picked
-    :alt: Python versions
-
-.. image:: https://travis-ci.org/anapaulagomes/picked.svg?branch=master
-    :target: https://travis-ci.org/anapaulagomes/picked
+.. image:: https://travis-ci.org/anapaulagomes/pytest-picked.svg?branch=master
+    :target: https://travis-ci.org/anapaulagomes/pytest-picked
     :alt: See Build Status on Travis CI
 
-.. image:: https://ci.appveyor.com/api/projects/status/github/anapaulagomes/picked?branch=master
-    :target: https://ci.appveyor.com/project/anapaulagomes/picked/branch/master
+.. image:: https://ci.appveyor.com/api/projects/status/github/anapaulagomes/pytest-picked?branch=master
+    :target: https://ci.appveyor.com/project/anapaulagomes/pytest-picked/branch/master
     :alt: See Build Status on AppVeyor
 
 Run the tests related to the changed files (according with Git)
@@ -28,27 +20,20 @@ This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`
 Features
 --------
 
-* TODO
-
-
-Requirements
-------------
-
-* TODO
-
-
-Installation
-------------
-
-You can install "picked" via `pip`_ from `PyPI`_::
-
-    $ pip install pytest-picked
+* Filter the tests according with `git status` changed files
 
 
 Usage
 -----
 
-* TODO
+`pytest --picked`
+
+
+TODO
+-----
+
+* Add option to run the changed files from the current branch
+* Guess the test file from given changed file
 
 Contributing
 ------------
