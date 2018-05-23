@@ -20,7 +20,7 @@ This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`
 Features
 --------
 
-* Filter the tests according with `git status` changed files
+* Run the tests according with changed files from `git status`
 
 
 Usage
