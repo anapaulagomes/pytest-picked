@@ -22,36 +22,68 @@ def pytest_collection_modifyitems(items, config):
     _display_afected_tests(config, picked_files, picked_folders)
 
     to_be_tested = []
-    for index, item in enumerate(items):
-        if item.location[0] in picked_files:
+    for item in items:
+        location = item.location[0]
+        if location in picked_files:
             to_be_tested.append(item)
         else:
-            for test in picked_folders:
-                if test in item.location[0]:
+            for folder in picked_folders:
+                if location.startswith(folder):
                     to_be_tested.append(item)
                     break
     items[:] = to_be_tested
 
 
 def _display_afected_tests(config, files, folders):
-    tw = _pytest.config.create_terminal_writer(config)
-    tw.line()
+    writer = _pytest.config.create_terminal_writer(config)
+    writer.line()
     message = "Changed test {}... {}. {}"
     files_msg = message.format("files", len(files), files)
     folders_msg = message.format("folders", len(folders), folders)
-    tw.line(files_msg)
-    tw.line(folders_msg)
+    writer.line(files_msg)
+    writer.line(folders_msg)
 
 
 def _afected_tests():
-    REGEX_FILES = r"\S+.(.*.py)"  # r'(\S+.test_\S+.py)'
-    REGEX_FOLDERS = r"\S+.(.*\/)\n"
+    """
+    Parse afected tests from `git status --short`.
+
+    The command output would look like this:
+    A  setup.py
+     U tests/test_pytest_picked.py
+    ?? .pylintrc
+
+    The first two digits are M, A, D, R, C, U, ? or !
+    The third is a white-space and the left is the path of
+    the file.
+    If the file was renamed, it will look like this:
+    R  school/migrations/from-school.csv -> new-things-from-school.csv
+
+    Reference:
+    https://git-scm.com/docs/git-status#git-status---short
+    """
     raw_output = _get_git_status()
-    files = re.findall(REGEX_FILES, raw_output)
-    folders = re.findall(REGEX_FOLDERS, raw_output)
-    files = [file.strip() for file in files if "test" in file]
-    folders = [folder.strip() for folder in folders if "test" in folder]
+
+    folders, files = [], []
+    for candidate in raw_output.splitlines():
+        file_or_folder = _extract_file_or_folder(candidate)
+
+        if "test" in file_or_folder:
+            if file_or_folder.endswith("/"):
+                folders.append(file_or_folder)
+            elif file_or_folder.endswith(".py"):
+                files.append(file_or_folder)
     return files, folders
+
+
+def _extract_file_or_folder(candidate):
+    start_path_index = 3
+    rename_indicator = "-> "
+
+    if rename_indicator in candidate:
+        indicator_index = candidate.find(rename_indicator)
+        start_path_index = indicator_index + len(rename_indicator)
+    return candidate[start_path_index:]
 
 
 def _get_git_status():
@@ -60,4 +92,4 @@ def _get_git_status():
     return output.stdout.decode("utf-8")
 
 
-# TODO branch changed files git diff --name-only
+# TODO branch changed files git diff --name-only master
