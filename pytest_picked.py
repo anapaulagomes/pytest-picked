@@ -1,5 +1,5 @@
-import re
 import subprocess
+
 import _pytest.config
 
 
@@ -13,7 +13,7 @@ def pytest_addoption(parser):
     )
 
 
-def pytest_collection_modifyitems(session, items, config):
+def pytest_collection_modifyitems(items, config):
     picked_plugin = config.getoption("picked")
     if not picked_plugin:
         return

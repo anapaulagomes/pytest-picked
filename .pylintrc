@@ -1,0 +1,7 @@
+[MESSAGES CONTROL]
+
+disable=C, R,
+  invalid-name,
+  missing-docstring,
+  unused-argument,
+  fixme
