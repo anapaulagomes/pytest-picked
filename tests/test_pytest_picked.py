@@ -1,9 +1,9 @@
 from unittest.mock import patch
 
-from pytest_picked import _afected_tests
+from pytest_picked import _affected_tests
 
 
-def test_shows_afected_tests(testdir):
+def test_shows_affected_tests(testdir):
     result = testdir.runpytest("--picked")
 
     assert "Changed test files..." in result.stdout.str()
@@ -143,7 +143,7 @@ def test_check_parser():
         )
 
         subprocess_mock.return_value.stdout = output
-        files, folders = _afected_tests()
+        files, folders = _affected_tests()
 
         expected_files = [
             "test_new_things.py",
