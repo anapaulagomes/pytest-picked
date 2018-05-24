@@ -23,6 +23,14 @@ Features
 * Run the tests according with changed files from `git status`
 
 
+Installation
+------------
+
+You can install "pytest-picked" via `pip`_ from `PyPI`_::
+
+    $ pip install pytest-picked
+
+
 Usage
 -----
 
