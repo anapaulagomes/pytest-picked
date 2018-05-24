@@ -18,8 +18,8 @@ def pytest_collection_modifyitems(items, config):
     if not picked_plugin:
         return
 
-    picked_files, picked_folders = _afected_tests()
-    _display_afected_tests(config, picked_files, picked_folders)
+    picked_files, picked_folders = _affected_tests()
+    _display_affected_tests(config, picked_files, picked_folders)
 
     to_be_tested = []
     for item in items:
@@ -34,7 +34,7 @@ def pytest_collection_modifyitems(items, config):
     items[:] = to_be_tested
 
 
-def _display_afected_tests(config, files, folders):
+def _display_affected_tests(config, files, folders):
     writer = _pytest.config.create_terminal_writer(config)
     writer.line()
     message = "Changed test {}... {}. {}"
@@ -44,9 +44,9 @@ def _display_afected_tests(config, files, folders):
     writer.line(folders_msg)
 
 
-def _afected_tests():
+def _affected_tests():
     """
-    Parse afected tests from `git status --short`.
+    Parse affected tests from `git status --short`.
 
     The command output would look like this:
     A  setup.py
