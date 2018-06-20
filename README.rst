@@ -23,7 +23,7 @@ Run the tests related to the modified files (according to Git)
     :height: 400px
     :alt: Demo
 
-Let's say you have the following output from your ``git status``:
+Let's say you have the following output from ``git status``:
 
 ::
 
@@ -43,7 +43,7 @@ Let's say you have the following output from your ``git status``:
   nothing added to commit but untracked files present (use "git add" to track)
 
 
-Running ``pytest --picked``, the plugin will run all the tests that comes from this output.
+Running ``pytest --picked``, the plugin will run all tests that come from this output.
 
 ::
 
@@ -63,7 +63,7 @@ Running ``pytest --picked``, the plugin will run all the tests that comes from t
 
   =========================== 2 passed in 0.07 seconds ===========================
 
-The files and folders with tests, that were modified but weren't committed yet will be run.
+All tests will be run from files and folders which are modified but not yet committed.
 No more copy and paste!
 
 
@@ -78,8 +78,7 @@ Usage
 Features
 --------
 
-* Run the tests according with modified files from ``git status``
-
+* Run tests from modified test files, according to ``git status``
 
 Installation
 ------------
