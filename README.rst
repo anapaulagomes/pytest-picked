@@ -19,7 +19,7 @@ Run the tests related to the modified files (according to Git)
 ---
 
 .. image:: demo.gif
-    :target: https://asciinema.org/a/cWV3sx6poG4aaPZfyVI8nOJ7J
+    :target: https://asciinema.org/a/PQ1pGEr4jQEIERA2tzjfivCmA
     :height: 400px
     :alt: Demo
 
