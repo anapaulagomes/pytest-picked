@@ -10,48 +10,94 @@ pytest-picked
     :target: https://ci.appveyor.com/project/anapaulagomes/pytest-picked/branch/master
     :alt: See Build Status on AppVeyor
 
-Run the tests related to the changed files (according with Git)
+.. image:: https://img.shields.io/pypi/v/pytest-picked.svg
+    :target: https://pypi.org/project/pytest-picked/
+    :alt: See Package Status on PyPI
 
-----
+Run the tests related to the modified files (according to Git)
 
-This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`_'s `cookiecutter-pytest-plugin`_ template.
+---
+
+.. image:: demo.gif
+    :target: https://asciinema.org/a/PQ1pGEr4jQEIERA2tzjfivCmA
+    :height: 400px
+    :alt: Demo
+
+Let's say you have the following output from ``git status``:
+
+::
+
+  $ git status
+
+  On branch master
+  Your branch is ahead of 'origin/master' by 1 commit.
+    (use "git push" to publish your local commits)
+
+  Untracked files:
+    (use "git add <file>..." to include in what will be committed)
+
+    api.py
+    tests/api/
+    tests/test_board.py
+
+  nothing added to commit but untracked files present (use "git add" to track)
 
 
-Features
---------
+Running ``pytest --picked``, the plugin will run all tests that come from this output.
 
-* Run the tests according with changed files from `git status`
+::
 
+  $ pytest --picked
 
-Installation
-------------
+  ============================= test session starts =============================
+  platform darwin -- Python 3.6.4, pytest-3.6.0, py-1.5.3, pluggy-0.6.0
+  rootdir: /Users/ana.gomes/personal-workspace/grandma, inifile:
+  plugins: picked-0.1.0, mock-1.10.0, flask-0.10.0, deadfixtures-2.0.1
+  collecting 34 items
+  Changed test files... 1. ['tests/test_board.py']
+  Changed test folders... 1. ['tests/api/']
+  collected 34 items
 
-You can install "pytest-picked" via `pip`_ from `PyPI`_::
+  tests/test_board.py .                                                      [ 50%]
+  tests/api/test_new.py .                                                    [100%]
 
-    $ pip install pytest-picked
+  =========================== 2 passed in 0.07 seconds ===========================
+
+All tests will be run from files and folders which are modified but not yet committed.
+No more copy and paste!
 
 
 Usage
 -----
 
-`pytest --picked`
+::
+
+  $ pytest --picked
 
 
-TODO
------
+Features
+--------
 
-* Add option to run the changed files from the current branch
-* Guess the test file from given changed file
+* Run tests from modified test files, according to ``git status``
+
+Installation
+------------
+
+You can install ``pytest-picked`` via `pip`_ from `PyPI`_::
+
+    $ pip install pytest-picked
+
 
 Contributing
 ------------
 Contributions are very welcome. Tests can be run with `tox`_, please ensure
 the coverage at least stays the same before you submit a pull request.
 
+
 License
 -------
 
-Distributed under the terms of the `MIT`_ license, "picked" is free and open source software
+Distributed under the terms of the `MIT`_ license, "pytest-picked" is free and open source software
 
 
 Issues
