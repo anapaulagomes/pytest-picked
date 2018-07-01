@@ -1,7 +1,7 @@
 import re
 import subprocess
 
-import _pytest.config
+import _pytest
 
 
 def pytest_addoption(parser):
@@ -14,26 +14,15 @@ def pytest_addoption(parser):
     )
 
 
-def pytest_collection_modifyitems(items, config):
+def pytest_configure(config):
     picked_plugin = config.getoption("picked")
     if not picked_plugin:
         return
 
     test_file_convention = config._getini("python_files")
     picked_files, picked_folders = _affected_tests(test_file_convention)
+    config.args = picked_files + picked_folders
     _display_affected_tests(config, picked_files, picked_folders)
-
-    to_be_tested = []
-    for item in items:
-        location = item.location[0]
-        if location in picked_files:
-            to_be_tested.append(item)
-        else:
-            for folder in picked_folders:
-                if location.startswith(folder):
-                    to_be_tested.append(item)
-                    break
-    items[:] = to_be_tested
 
 
 def _display_affected_tests(config, files, folders):
@@ -95,6 +84,3 @@ def _get_git_status():
     command = ["git", "status", "--short"]
     output = subprocess.run(command, stdout=subprocess.PIPE)
     return output.stdout.decode("utf-8")
-
-
-# TODO branch changed files git diff --name-only master
