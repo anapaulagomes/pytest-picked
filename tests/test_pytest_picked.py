@@ -139,11 +139,14 @@ def test_check_parser():
             + b" M picked.py\n"
             + b"A  setup.py\n"
             + b" U tests/test_pytest_picked.py\n"
-            + b"?? random/tests/"
+            + b"?? random/tests/\n"
+            + b" M intestine.py\n"
+            + b"?? random/attest/\n"
         )
 
         subprocess_mock.return_value.stdout = output
-        files, folders = _affected_tests()
+        test_files = ["test_*.py", "*_test.py"]
+        files, folders = _affected_tests(test_files)
 
         expected_files = [
             "test_new_things.py",
