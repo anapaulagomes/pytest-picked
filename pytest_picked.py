@@ -1,3 +1,4 @@
+import re
 import subprocess
 
 import _pytest.config
@@ -65,6 +66,9 @@ def _affected_tests(test_files):
     """
     raw_output = _get_git_status()
 
+    re_list = [item.replace('.', '\.').replace('*', '.*') for item in test_files]
+    re_string = "|".join(re_list)
+
     folders, files = [], []
     for candidate in raw_output.splitlines():
         file_or_folder = _extract_file_or_folder(candidate)
@@ -72,8 +76,8 @@ def _affected_tests(test_files):
         if "test" in file_or_folder:
             if file_or_folder.endswith("/"):
                 folders.append(file_or_folder)
-            elif file_or_folder.endswith(".py"):
-                files.append(file_or_folder)
+        elif re.search(re_string, candidate):
+            files.append(file_or_folder)
     return files, folders
 
 
