@@ -18,7 +18,8 @@ def pytest_collection_modifyitems(items, config):
     if not picked_plugin:
         return
 
-    picked_files, picked_folders = _affected_tests()
+    test_files = config._getini('python_files')
+    picked_files, picked_folders = _affected_tests(test_files)
     _display_affected_tests(config, picked_files, picked_folders)
 
     to_be_tested = []
@@ -44,7 +45,7 @@ def _display_affected_tests(config, files, folders):
     writer.line(folders_msg)
 
 
-def _affected_tests():
+def _affected_tests(test_files):
     """
     Parse affected tests from `git status --short`.
 
