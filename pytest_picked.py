@@ -68,7 +68,8 @@ def _affected_tests(test_files):
     """
     raw_output = _get_git_status()
 
-    re_list = [item.replace('.', '\.').replace('*', '.*') for item in test_files]
+    re_list = [item.replace('.', '\.').replace('*', '.*')
+               for item in test_files]
     re_string = "|".join(re_list)
 
     folders, files = [], []
@@ -77,8 +78,7 @@ def _affected_tests(test_files):
 
         if file_or_folder.endswith("/"):
             path = Path(file_or_folder)
-            test_in_folders = any([part.startswith("test") for part in path.parts])
-            if test_in_folders:
+            if any([part.startswith("test") for part in path.parts]):
                 folders.append(file_or_folder)
         elif re.search(re_string, candidate):
             files.append(file_or_folder)
