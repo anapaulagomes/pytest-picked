@@ -21,8 +21,8 @@ def pytest_collection_modifyitems(items, config):
     if not picked_plugin:
         return
 
-    test_files = config._getini('python_files')
-    picked_files, picked_folders = _affected_tests(test_files)
+    test_file_convention = config._getini('python_files')
+    picked_files, picked_folders = _affected_tests(test_file_convention)
     _display_affected_tests(config, picked_files, picked_folders)
 
     to_be_tested = []
@@ -48,7 +48,7 @@ def _display_affected_tests(config, files, folders):
     writer.line(folders_msg)
 
 
-def _affected_tests(test_files):
+def _affected_tests(test_file_convention):
     """
     Parse affected tests from `git status --short`.
 
@@ -69,7 +69,7 @@ def _affected_tests(test_files):
     raw_output = _get_git_status()
 
     re_list = [item.replace('.', '\.').replace('*', '.*')
-               for item in test_files]
+               for item in test_file_convention]
     re_string = "|".join(re_list)
 
     folders, files = [], []
