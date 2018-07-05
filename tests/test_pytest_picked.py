@@ -141,7 +141,8 @@ def test_check_parser():
             + b" U tests/test_pytest_picked.py\n"
             + b"?? random/tests/\n"
             + b" M intestine.py\n"
-            + b"?? random/attest/\n"
+            + b"?? api/\n"
+            + b" M tests_new/intestine.py\n"
         )
 
         subprocess_mock.return_value.stdout = output
@@ -153,7 +154,7 @@ def test_check_parser():
             "school/tests/test_rescue_students.py",
             "tests/test_pytest_picked.py",
         ]
-        expected_folders = ["tests/", "random/tests/"]
+        expected_folders = ["tests/", "random/tests/", "api/"]
 
         assert files == expected_files
         assert folders == expected_folders

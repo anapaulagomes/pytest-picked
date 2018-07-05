@@ -1,8 +1,6 @@
 import re
 import subprocess
 
-from pathlib import Path
-
 import _pytest.config
 
 
@@ -77,9 +75,7 @@ def _affected_tests(test_file_convention):
         file_or_folder = _extract_file_or_folder(candidate)
 
         if file_or_folder.endswith("/"):
-            path = Path(file_or_folder)
-            if any([part.startswith("test") for part in path.parts]):
-                folders.append(file_or_folder)
+            folders.append(file_or_folder)
         elif re.search(re_string, candidate):
             files.append(file_or_folder)
     return files, folders
