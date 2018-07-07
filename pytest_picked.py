@@ -1,3 +1,4 @@
+import re
 import subprocess
 
 import _pytest.config
@@ -18,7 +19,8 @@ def pytest_collection_modifyitems(items, config):
     if not picked_plugin:
         return
 
-    picked_files, picked_folders = _affected_tests()
+    test_file_convention = config._getini("python_files")
+    picked_files, picked_folders = _affected_tests(test_file_convention)
     _display_affected_tests(config, picked_files, picked_folders)
 
     to_be_tested = []
@@ -44,7 +46,7 @@ def _display_affected_tests(config, files, folders):
     writer.line(folders_msg)
 
 
-def _affected_tests():
+def _affected_tests(test_file_convention):
     """
     Parse affected tests from `git status --short`.
 
@@ -64,15 +66,18 @@ def _affected_tests():
     """
     raw_output = _get_git_status()
 
+    re_list = [item.replace(".", "\.").replace("*", ".*")
+               for item in test_file_convention]
+    re_string = "|".join(re_list)
+
     folders, files = [], []
     for candidate in raw_output.splitlines():
         file_or_folder = _extract_file_or_folder(candidate)
 
-        if "test" in file_or_folder:
-            if file_or_folder.endswith("/"):
-                folders.append(file_or_folder)
-            elif file_or_folder.endswith(".py"):
-                files.append(file_or_folder)
+        if file_or_folder.endswith("/"):
+            folders.append(file_or_folder)
+        elif re.search(re_string, candidate):
+            files.append(file_or_folder)
     return files, folders
 
 
