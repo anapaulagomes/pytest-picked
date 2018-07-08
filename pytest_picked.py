@@ -1,5 +1,5 @@
 import re
-import subprocess
+import subprocess  # nosec
 
 import _pytest
 
@@ -55,8 +55,10 @@ def _affected_tests(test_file_convention):
     """
     raw_output = _get_git_status()
 
-    re_list = [item.replace(".", "\.").replace("*", ".*")
-               for item in test_file_convention]
+    re_list = [
+        item.replace(".", "\.").replace("*", ".*")
+        for item in test_file_convention
+    ]
     re_string = "|".join(re_list)
 
     folders, files = [], []

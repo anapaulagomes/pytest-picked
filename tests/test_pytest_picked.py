@@ -169,7 +169,9 @@ def test_should_match_with_the_begin_of_path(testdir, tmpdir, tmpdir_factory):
         tmpdir.mkdir("tests")
         tmpdir.mkdir("othertests")
 
-        result.stdout.fnmatch_lines([
-            "Changed test files... 0. []",
-            "Changed test folders... 1. ['tests/']"
-        ])
+        result.stdout.fnmatch_lines(
+            [
+                "Changed test files... 0. []",
+                "Changed test folders... 1. ['tests/']",
+            ]
+        )
