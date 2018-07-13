@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-sphinx = "*"
 
 [dev-packages]
 pre-commit = "*"
@@ -12,3 +11,7 @@ tox = "*"
 black = "*"
 isort = "*"
 pylint = "*"
+sphinx = "*"
+bandit = "*"
+pyflakes = "*"
+flake8 = "*"
