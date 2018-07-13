@@ -4,6 +4,7 @@
 ### Added
 - Filter tests according with pytest file convention
 - Only collects the tests from `git status`
+- LambdaLint with Pylint and Bandit and Black in Tox
 
 ## [0.1.0] - 2018-05-24
 ### Added
