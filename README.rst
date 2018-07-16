@@ -6,7 +6,7 @@ pytest-picked
     :target: https://travis-ci.org/anapaulagomes/pytest-picked
     :alt: See Build Status on Travis CI
 
-.. image:: https://ci.appveyor.com/api/projects/status/github/anapaulagomes/pytest-picked?branch=master
+.. image:: https://ci.appveyor.com/api/projects/status/github/anapaulagomes/pytest-picked?branch=master&svg=true
     :target: https://ci.appveyor.com/project/anapaulagomes/pytest-picked/branch/master
     :alt: See Build Status on AppVeyor
 
