@@ -128,36 +128,34 @@ def test_handle_with_white_spaces(testdir):
 
 
 def test_check_parser():
-    with patch("pytest_picked.subprocess.run") as subprocess_mock:
-        output = (
-            b"R  school/migrations/from-school.csv -> test_new_things.py\n"
-            + b"D  school/migrations/0032_auto_20180515_1308.py\n"
-            + b"?? Pipfile\n"
-            + b"!! school/tests/test_rescue_students.py\n"
-            + b"C  tests/\n"
-            + b" M .pre-commit-config.yaml\n"
-            + b" M picked.py\n"
-            + b"A  setup.py\n"
-            + b" U tests/test_pytest_picked.py\n"
-            + b"?? random/tests/\n"
-            + b" M intestine.py\n"
-            + b"?? api/\n"
-            + b" M tests_new/intestine.py\n"
-        )
+    test_file_convention = ["test_*.py", "*_test.py"]
+    raw_output = (
+        "R  school/migrations/from-school.csv -> test_new_things.py\n"
+        + "D  school/migrations/0032_auto_20180515_1308.py\n"
+        + "?? Pipfile\n"
+        + "!! school/tests/test_rescue_students.py\n"
+        + "C  tests/\n"
+        + " M .pre-commit-config.yaml\n"
+        + " M picked.py\n"
+        + "A  setup.py\n"
+        + " U tests/test_pytest_picked.py\n"
+        + "?? random/tests/\n"
+        + " M intestine.py\n"
+        + "?? api/\n"
+        + " M tests_new/intestine.py\n"
+    )
 
-        subprocess_mock.return_value.stdout = output
-        test_files = ["test_*.py", "*_test.py"]
-        files, folders = _affected_tests(test_files)
+    files, folders = _affected_tests(raw_output, test_file_convention)
 
-        expected_files = [
-            "test_new_things.py",
-            "school/tests/test_rescue_students.py",
-            "tests/test_pytest_picked.py",
-        ]
-        expected_folders = ["tests/", "random/tests/", "api/"]
+    expected_files = [
+        "test_new_things.py",
+        "school/tests/test_rescue_students.py",
+        "tests/test_pytest_picked.py",
+    ]
+    expected_folders = ["tests/", "random/tests/", "api/"]
 
-        assert files == expected_files
-        assert folders == expected_folders
+    assert files == expected_files
+    assert folders == expected_folders
 
 
 def test_should_match_with_the_begin_of_path(testdir, tmpdir, tmpdir_factory):
@@ -170,8 +168,26 @@ def test_should_match_with_the_begin_of_path(testdir, tmpdir, tmpdir_factory):
         tmpdir.mkdir("othertests")
 
         result.stdout.fnmatch_lines(
-            [
-                "Changed test files... 0. []",
-                "Changed test folders... 1. ['tests/']",
-            ]
+            ["Changed test files... 0. []", "Changed test folders... 1. ['tests/']"]
         )
+
+
+def test_should_accept_branch_as_mode():
+    pass
+
+
+def test_should_parse_branch_changed_files():
+    raw_output = (
+        "pytest_picked.py\n"
+        + "tests/test_pytest_picked.py\n"
+        + "tests/test_other_module.py"
+    )
+    test_file_convention = ["test_*.py", "*_test.py"]
+
+    files, folders = _affected_tests(raw_output, test_file_convention, mode="branch")
+
+    expected_files = ["tests/test_pytest_picked.py", "tests/test_other_module.py"]
+    expected_folders = []
+
+    assert files == expected_files
+    assert folders == expected_folders
