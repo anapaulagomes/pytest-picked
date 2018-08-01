@@ -172,10 +172,6 @@ def test_should_match_with_the_begin_of_path(testdir, tmpdir, tmpdir_factory):
         )
 
 
-def test_should_accept_branch_as_mode():
-    pass
-
-
 def test_should_parse_branch_changed_files():
     raw_output = (
         "pytest_picked.py\n"
@@ -191,3 +187,30 @@ def test_should_parse_branch_changed_files():
 
     assert files == expected_files
     assert folders == expected_folders
+
+
+def test_should_accept_branch_as_mode(testdir, tmpdir):
+    with patch("pytest_picked.subprocess.run") as subprocess_mock:
+        output = b"test_flows.py\ntest_serializers.py\n"
+        subprocess_mock.return_value.stdout = output
+
+        result = testdir.runpytest("--picked", "--mode=branch")
+        testdir.makepyfile(
+            ".py",
+            test_flows="""
+            def test_sth():
+                assert True
+            """,
+            test_serializers="""
+            def test_sth():
+                assert True
+            """,
+        )
+        tmpdir.mkdir("tests")
+        result.stdout.fnmatch_lines(
+            [
+                "Changed test files... 2. "
+                + "['test_flows.py', 'test_serializers.py']",
+                "Changed test folders... 0. []",
+            ]
+        )
