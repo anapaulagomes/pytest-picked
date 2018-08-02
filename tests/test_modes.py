@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from modes import Branch, Unstaged
+from pytest_picked.modes import Branch, Unstaged
 
 
 def test_check_parser():
@@ -21,7 +21,7 @@ def test_check_parser():
         + b" M tests_new/intestine.py\n"
     )
 
-    with patch("modes.subprocess.run") as subprocess_mock:
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
         subprocess_mock.return_value.stdout = raw_output
         mode = Unstaged(test_file_convention)
         files, folders = mode.affected_tests()
@@ -45,12 +45,15 @@ def test_should_parse_branch_changed_files():
     )
     test_file_convention = ["test_*.py", "*_test.py"]
 
-    with patch("modes.subprocess.run") as subprocess_mock:
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
         subprocess_mock.return_value.stdout = raw_output
         mode = Branch(test_file_convention)
         files, folders = mode.affected_tests()
 
-    expected_files = ["tests/test_pytest_picked.py", "tests/test_other_module.py"]
+    expected_files = [
+        "tests/test_pytest_picked.py",
+        "tests/test_other_module.py",
+    ]
     expected_folders = []
 
     assert files == expected_files

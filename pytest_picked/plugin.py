@@ -1,6 +1,6 @@
 import _pytest
 
-from modes import Branch, Unstaged
+from .modes import Branch, Unstaged
 
 
 def pytest_addoption(parser):
@@ -27,7 +27,9 @@ def pytest_configure(config):
         return
 
     picked_mode = config.getoption("picked_mode")
-    test_file_convention = config._getini("python_files")  # pylint: disable=W0212
+    test_file_convention = config._getini(  # pylint: disable=W0212
+        "python_files"
+    )
 
     if picked_mode == "branch":
         mode = Branch(test_file_convention)

@@ -4,7 +4,7 @@
 import codecs
 import os
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 
 def read(fname):
@@ -23,7 +23,7 @@ setup(
     url="https://github.com/anapaulagomes/pytest-picked",
     description="Run the tests related to the changed files",
     long_description=read("README.rst"),
-    py_modules=["pytest_picked"],
+    packages=find_packages(exclude=["tests", "docs"]),
     python_requires=">=3.5",
     install_requires=["pytest>=3.5.0"],
     classifiers=[
@@ -39,5 +39,5 @@ setup(
         "Operating System :: OS Independent",
         "License :: OSI Approved :: MIT License",
     ],
-    entry_points={"pytest11": ["picked = pytest_picked"]},
+    entry_points={"pytest11": ["picked = pytest_picked.plugin"]},
 )
