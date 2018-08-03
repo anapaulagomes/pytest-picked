@@ -31,10 +31,11 @@ def pytest_configure(config):
         "python_files"
     )
 
-    if picked_mode == "branch":
-        mode = Branch(test_file_convention)
-    else:
-        mode = Unstaged(test_file_convention)
+    modes = {
+        "branch": Branch(test_file_convention),
+        "unstaged": Unstaged(test_file_convention),
+    }
+    mode = modes.get(picked_mode, "unstaged")
 
     picked_files, picked_folders = mode.affected_tests()
 
