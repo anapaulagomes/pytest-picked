@@ -167,3 +167,12 @@ def test_should_accept_branch_as_mode(testdir, tmpdir):
                 "Changed test folders... 0. []",
             ]
         )
+
+
+def test_should_not_run_the_tests_if_mode_is_invalid(testdir, tmpdir):
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        output = b"test_flows.py\ntest_serializers.py\n"
+        subprocess_mock.return_value.stdout = output
+
+        result = testdir.runpytest("--picked", "--mode=random")
+        result.stdout.re_match_lines(["Invalid mode. Options: "])
