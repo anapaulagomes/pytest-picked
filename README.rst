@@ -13,6 +13,14 @@ pytest-picked
 .. image:: https://img.shields.io/pypi/v/pytest-picked.svg
     :target: https://pypi.org/project/pytest-picked/
     :alt: See Package Status on PyPI
+    
+.. image:: https://img.shields.io/conda/vn/conda-forge/pytest-picked.svg
+    :target: https://anaconda.org/conda-forge/pytest-picked 
+    :alt: Conda forge package
+    
+.. image:: https://img.shields.io/pypi/pyversions/pytest-picked.svg
+    :target: https://pypi.org/project/pytest-picked    
+    :alt: Supported Python versions
 
 Run the tests related to the modified files (according to Git)
 
