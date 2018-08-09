@@ -13,21 +13,20 @@ pytest-picked
 .. image:: https://img.shields.io/pypi/v/pytest-picked.svg
     :target: https://pypi.org/project/pytest-picked/
     :alt: See Package Status on PyPI
-    
+
 .. image:: https://img.shields.io/conda/vn/conda-forge/pytest-picked.svg
-    :target: https://anaconda.org/conda-forge/pytest-picked 
+    :target: https://anaconda.org/conda-forge/pytest-picked
     :alt: Conda forge package
-    
+
 .. image:: https://img.shields.io/pypi/pyversions/pytest-picked.svg
-    :target: https://pypi.org/project/pytest-picked    
+    :target: https://pypi.org/project/pytest-picked
     :alt: Supported Python versions
 
-Run the tests related to the modified files (according to Git)
+Run the tests related to the unstaged files or the current branch (according to Git)
 
 ---
 
 .. image:: demo.gif
-    :target: https://asciinema.org/a/PQ1pGEr4jQEIERA2tzjfivCmA
     :height: 400px
     :alt: Demo
 
@@ -81,6 +80,10 @@ Usage
 ::
 
   $ pytest --picked
+
+  $ pytest --picked --mode=branch
+
+  $ pytest --picked --mode=unstaged  # default
 
 
 Features
