@@ -20,10 +20,11 @@ class Mode(ABC):
         folders, files = [], []
         for candidate in raw_output.splitlines():
             file_or_folder = self.parser(candidate)
-            if file_or_folder.endswith("/"):
-                folders.append(file_or_folder)
-            elif re.search(re_string, file_or_folder):
-                files.append(file_or_folder)
+            if file_or_folder:
+                if file_or_folder.endswith("/"):
+                    folders.append(file_or_folder)
+                elif re.search(re_string, file_or_folder):
+                    files.append(file_or_folder)
         return files, folders
 
     def git_output(self):
@@ -64,10 +65,33 @@ class Unstaged(Mode):
         return ["git", "status", "--short"]
 
     def parser(self, candidate):
-        """Discard the first 3 characters."""
+        """
+        Discard the first 3 characters.
+
+        Parse affected tests from Unstaged command.
+        The command output would look like this:
+        A  setup.py
+        U tests/test_pytest_picked.py
+        ?? .pylintrc
+        D  tests/migrations/auto.py
+        The first two digits are M, A, D, R, C, U, ? or !
+        The third is a white-space and the left is the path of
+        the file.
+        If the file was deleted it will have a D at the beginning
+        of the line. If the file was renamed, it will look like this:
+        R  school/migrations/from-school.csv -> new-things-from-school.csv
+        Reference:
+        https://git-scm.com/docs/git-status#git-status---short
+        """
         start_path_index = 3
         rename_indicator = "-> "
+        delete_indicator = " D "
+        deleted_and_renamed_indicator = "AD "
 
+        if candidate.startswith(delete_indicator):
+            return None
+        if candidate.startswith(deleted_and_renamed_indicator):
+            return None
         if rename_indicator in candidate:
             indicator_index = candidate.find(rename_indicator)
             start_path_index = indicator_index + len(rename_indicator)
