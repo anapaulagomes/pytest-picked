@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 
 
 class Mode(ABC):
+
     def __init__(self, test_file_convention):
         self.test_file_convention = test_file_convention
 
@@ -49,6 +50,7 @@ class Mode(ABC):
 
 
 class Branch(Mode):
+
     def command(self):
         return ["git", "diff", "--name-only", "master"]
 
@@ -58,6 +60,7 @@ class Branch(Mode):
 
 
 class Unstaged(Mode):
+
     def command(self):
         return ["git", "status", "--short"]
 
