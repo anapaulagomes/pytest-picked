@@ -28,7 +28,8 @@ class Mode(ABC):
         return files, folders
 
     def git_output(self):
-        output = subprocess.run(self.command(), stdout=subprocess.PIPE)
+        output = subprocess.run(  # nosec
+            self.command(), stdout=subprocess.PIPE)
         return output.stdout.decode("utf-8")
 
     def print_command(self):
