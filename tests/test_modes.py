@@ -6,7 +6,6 @@ from pytest_picked.modes import Branch, Unstaged
 
 
 class TestUnstaged:
-
     def test_should_return_git_status_command(self):
         mode = Unstaged([])
         command = mode.command()
@@ -74,7 +73,6 @@ class TestUnstaged:
 
 
 class TestBranch:
-
     def test_should_return_command_that_list_all_changed_files(self):
         mode = Branch([])
         command = mode.command()
