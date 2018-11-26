@@ -191,3 +191,59 @@ def test_should_not_run_the_tests_if_mode_is_invalid(testdir, tmpdir):
 
         result = testdir.runpytest("--picked", "--mode=random")
         result.stdout.re_match_lines(["Invalid mode. Options: "])
+
+
+def test_picked_first_orders_tests_correctly(testdir, tmpdir):
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        output = b" M test_flows.py\n M test_serializers.py\n"
+        subprocess_mock.return_value.stdout = output
+
+        testdir.makepyfile(
+            test_access="""
+            def test_sth():
+                assert True
+            """,
+            test_flows="""
+            def test_sth():
+                assert True
+            """,
+            test_serializers="""
+            def test_sth():
+                assert True
+            """,
+            test_views="""
+            def test_sth():
+                assert True
+            """,
+        )
+        result = testdir.runpytest("--picked=first", "-v")
+        result.stdout.re_match_lines([
+            "test_flows.py.+",
+            "test_serializers.py.+",
+            "test_access.py.+",
+            "test_views.py.+",
+        ])
+
+
+def test_picked_first_but_nothing_changed(testdir, tmpdir):
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        output = b"\n"
+        subprocess_mock.return_value.stdout = output
+
+        testdir.makepyfile(
+            test_access="""
+            def test_sth():
+                assert True
+            """,
+            test_flows="""
+            def test_sth():
+                assert True
+            """,
+        )
+        result = testdir.runpytest("--picked=first", "-v")
+        result.stdout.re_match_lines(
+            [
+                "test_access.py.+",
+                "test_flows.py.+",
+            ]
+        )
