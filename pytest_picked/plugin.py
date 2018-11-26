@@ -7,9 +7,15 @@ def pytest_addoption(parser):
     group = parser.getgroup("picked")
     group.addoption(
         "--picked",
-        action="store_true",
+        action="store",
         dest="picked",
-        help="Run the tests related to the changed files",
+        choices=("only", "first"),
+        nargs="?",
+        const="only",
+        help=(
+            "Run the tests related to the changed files either on their own, "
+            "or first"
+        ),
     )
     group.addoption(
         "--mode",

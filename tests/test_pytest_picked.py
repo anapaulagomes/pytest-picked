@@ -1,4 +1,5 @@
 from unittest.mock import patch
+import pytest
 
 
 def test_shows_affected_tests(testdir):
@@ -11,9 +12,23 @@ def test_shows_affected_tests(testdir):
 def test_help_message(testdir):
     result = testdir.runpytest("--help")
 
-    result.stdout.fnmatch_lines(
-        ["picked:", "*--picked*Run the tests related to the changed files"]
-    )
+    result.stdout.re_match_lines([
+        "^picked:$",
+        r"^\s+--picked=\[{only,first}\]$",
+        r"^\s+Run the tests related to the changed files either on",
+        r"^\s+their own, or first",
+    ])
+
+
+@pytest.mark.parametrize("picked_type", [None, "only"])
+def test_picked_type_options(testdir, picked_type):
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        subprocess_mock.return_value.stdout = b""
+
+        result = testdir.runpytest(
+            "--picked={}".format(picked_type) if picked_type else "--picked")
+
+        result.stdout.fnmatch_lines(["Changed test files... 0. []"])
 
 
 def test_filter_items_according_with_git_status(testdir, tmpdir):
