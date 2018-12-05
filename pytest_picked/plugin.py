@@ -54,11 +54,9 @@ def pytest_configure(config):
     if not picked_type or picked_type != "only":
         return
 
-    maybe_affected = _get_affected_paths(config)
-    if maybe_affected:
-        picked_files, picked_folders = maybe_affected
-        config.args = picked_files + picked_folders
-        _display_affected_tests(config, picked_files, picked_folders)
+    picked_files, picked_folders = _get_affected_paths(config)
+    config.args = picked_files + picked_folders
+    _display_affected_tests(config, picked_files, picked_folders)
 
 
 def pytest_collection_modifyitems(session, config, items):
@@ -66,10 +64,8 @@ def pytest_collection_modifyitems(session, config, items):
     if not picked_type or picked_type != "first":
         return
 
-    maybe_affected = _get_affected_paths(config)
-    if not maybe_affected:
-        return
-    match_paths = maybe_affected[0] + maybe_affected[1]
+    affected_files, affected_folders = _get_affected_paths(config)
+    match_paths = affected_files + affected_folders
 
     run_first = []
     run_later = []
