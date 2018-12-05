@@ -44,7 +44,7 @@ def _get_affected_paths(config):
         error = "Invalid mode. Options: `{}`.".format(", ".join(modes.keys()))
         _write(config, [error])
         config.args = []
-        return None
+        raise ValueError(error)
     else:
         return mode.affected_tests()
 
