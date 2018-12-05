@@ -66,16 +66,17 @@ def pytest_collection_modifyitems(session, config, items):
 
     affected_files, affected_folders = _get_affected_paths(config)
     match_paths = affected_files + affected_folders
-
-    run_first = []
-    run_later = []
-    for item in items:
-        item_path = item.location[0]
-        if any(fnmatch(item_path, m) for m in match_paths):
-            run_first.append(item)
-        else:
-            run_later.append(item)
-    items[:] = run_first + run_later
+    # only reorder if there was anything matched
+    if match_paths:
+        run_first = []
+        run_later = []
+        for item in items:
+            item_path = item.location[0]
+            if any(fnmatch(item_path, m) for m in match_paths):
+                run_first.append(item)
+            else:
+                run_later.append(item)
+        items[:] = run_first + run_later
 
 
 def _display_affected_tests(config, files, folders):
