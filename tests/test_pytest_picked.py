@@ -1,4 +1,5 @@
 from unittest.mock import patch
+import pytest
 
 
 def test_shows_affected_tests(testdir):
@@ -11,9 +12,26 @@ def test_shows_affected_tests(testdir):
 def test_help_message(testdir):
     result = testdir.runpytest("--help")
 
-    result.stdout.fnmatch_lines(
-        ["picked:", "*--picked*Run the tests related to the changed files"]
+    result.stdout.re_match_lines(
+        [
+            "^picked:$",
+            r"^\s+--picked=\[{only,first}\]$",
+            r"^\s+Run the tests related to the changed files either on",
+            r"^\s+their own, or first",
+        ]
     )
+
+
+@pytest.mark.parametrize("picked_type", [None, "only"])
+def test_picked_type_options(testdir, picked_type):
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        subprocess_mock.return_value.stdout = b""
+
+        result = testdir.runpytest(
+            "--picked={}".format(picked_type) if picked_type else "--picked"
+        )
+
+        result.stdout.fnmatch_lines(["Changed test files... 0. []"])
 
 
 def test_filter_items_according_with_git_status(testdir, tmpdir):
@@ -176,3 +194,61 @@ def test_should_not_run_the_tests_if_mode_is_invalid(testdir, tmpdir):
 
         result = testdir.runpytest("--picked", "--mode=random")
         result.stdout.re_match_lines(["Invalid mode. Options: "])
+
+
+def test_picked_first_orders_tests_correctly(testdir, tmpdir):
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        output = b" M test_flows.py\n M test_serializers.py\n"
+        subprocess_mock.return_value.stdout = output
+
+        testdir.makepyfile(
+            test_access="""
+            def test_sth():
+                assert True
+            """,
+            test_flows="""
+            def test_sth():
+                assert True
+            """,
+            test_serializers="""
+            def test_sth():
+                assert True
+            """,
+            test_views="""
+            def test_sth():
+                assert True
+            """,
+        )
+        result = testdir.runpytest("--picked=first", "-v")
+        result.stdout.re_match_lines(
+            [
+                "test_flows.py.+",
+                "test_serializers.py.+",
+                "test_access.py.+",
+                "test_views.py.+",
+            ]
+        )
+
+
+def test_picked_first_but_nothing_changed(testdir, tmpdir):
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        output = b"\n"
+        subprocess_mock.return_value.stdout = output
+
+        testdir.makepyfile(
+            test_access="""
+            def test_sth():
+                assert True
+            """,
+            test_flows="""
+            def test_sth():
+                assert True
+            """,
+        )
+        result = testdir.runpytest("--picked=first", "-v")
+        result.stdout.re_match_lines(
+            [
+                "test_access.py.+",
+                "test_flows.py.+",
+            ]
+        )

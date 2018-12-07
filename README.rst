@@ -81,6 +81,8 @@ Usage
 
   $ pytest --picked
 
+  $ pytest --picked=first
+
   $ pytest --picked --mode=branch
 
   $ pytest --picked --mode=unstaged  # default
@@ -89,7 +91,10 @@ Usage
 Features
 --------
 
-* Run tests from modified test files, according to ``git status``
+Using ``git status``, this plugin allows you to:
+
+* Run only tests from modified test files
+* Run tests from modified test files first, followed by all unmodified tests
 
 Installation
 ------------

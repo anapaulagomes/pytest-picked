@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Added --picked=first mode, which will run all tests, but with any changed tests queued first
 
 ## [0.3.2] - 2018-11-25
 ### Added
