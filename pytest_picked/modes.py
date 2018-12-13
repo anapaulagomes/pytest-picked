@@ -30,8 +30,8 @@ class Mode(object):
         return files, folders
 
     def git_output(self):
-        output = subprocess.check_output(self.command(), stdout=subprocess.PIPE)  # nosec
-        return output.stdout.decode("utf-8")
+        output = subprocess.check_output(self.command())  # nosec
+        return output.decode("utf-8")
 
     def print_command(self):
         return " ".join(self.command())

@@ -6,8 +6,9 @@ import pytest
 
 
 def test_shows_affected_tests(testdir):
+    testdir.tmpdir.ensure_dir()
+    testdir.run('git', 'init')
     result = testdir.runpytest("--picked")
-
     assert "Changed test files..." in result.stdout.str()
     assert "Changed test folders..." in result.stdout.str()
 
@@ -28,7 +29,7 @@ def test_help_message(testdir):
 @pytest.mark.parametrize("picked_type", [None, "only"])
 def test_picked_type_options(testdir, picked_type):
     with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
-        subprocess_mock.return_value.stdout = b""
+        subprocess_mock.return_value = b""
 
         result = testdir.runpytest(
             "--picked={}".format(picked_type) if picked_type else "--picked"
@@ -40,7 +41,7 @@ def test_picked_type_options(testdir, picked_type):
 def test_filter_items_according_with_git_status(testdir, tmpdir):
     with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
         output = b" M test_flows.py\n M test_serializers.py\n A tests/\n"
-        subprocess_mock.return_value.stdout = output
+        subprocess_mock.return_value = output
 
         result = testdir.runpytest("--picked")
         testdir.makepyfile(
@@ -66,7 +67,7 @@ def test_filter_items_according_with_git_status(testdir, tmpdir):
 
 def test_return_nothing_if_does_not_have_changed_test_files(testdir):
     with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
-        subprocess_mock.return_value.stdout = b""
+        subprocess_mock.return_value = b""
 
         result = testdir.runpytest("--picked")
 
@@ -77,7 +78,7 @@ def test_return_error_if_not_git_repository(testdir):
     o = b"fatal: Not a git repository (or any of the parent directories): .git"
     with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
 
-        subprocess_mock.return_value.stdout = o
+        subprocess_mock.return_value = o
 
         result = testdir.runpytest("--picked")
 
@@ -93,7 +94,7 @@ def test_dont_call_the_plugin_if_dont_find_it_as_option(testdir):
 def test_filter_file_when_is_either_modified_and_not_staged(testdir):
     with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
         output = b"MM test_picked.py\nM  tests/test_pytest_picked.py"
-        subprocess_mock.return_value.stdout = output
+        subprocess_mock.return_value = output
 
         result = testdir.runpytest("--picked")
         testdir.makepyfile(
@@ -122,7 +123,7 @@ def test_handle_with_white_spaces(testdir):
             b" M school/tests/test_flows.py\n"
             + b"A  school/tests/test_serializers.py\n M sales/tasks.py"
         )
-        subprocess_mock.return_value.stdout = output
+        subprocess_mock.return_value = output
 
         result = testdir.runpytest("--picked")
         testdir.makepyfile(
@@ -149,7 +150,7 @@ def test_handle_with_white_spaces(testdir):
 def test_should_match_with_the_begin_of_path(testdir, tmpdir, tmpdir_factory):
     with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
         output = b" A tests/\n"
-        subprocess_mock.return_value.stdout = output
+        subprocess_mock.return_value = output
 
         result = testdir.runpytest("--picked")
         tmpdir.mkdir("tests")
@@ -166,7 +167,7 @@ def test_should_match_with_the_begin_of_path(testdir, tmpdir, tmpdir_factory):
 def test_should_accept_branch_as_mode(testdir, tmpdir):
     with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
         output = b"test_flows.py\ntest_serializers.py\n"
-        subprocess_mock.return_value.stdout = output
+        subprocess_mock.return_value = output
 
         result = testdir.runpytest("--picked", "--mode=branch")
         testdir.makepyfile(
@@ -193,7 +194,7 @@ def test_should_accept_branch_as_mode(testdir, tmpdir):
 def test_should_not_run_the_tests_if_mode_is_invalid(testdir, tmpdir):
     with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
         output = b"test_flows.py\ntest_serializers.py\n"
-        subprocess_mock.return_value.stdout = output
+        subprocess_mock.return_value = output
 
         result = testdir.runpytest("--picked", "--mode=random")
         result.stdout.re_match_lines(["Invalid mode. Options: "])
@@ -202,7 +203,7 @@ def test_should_not_run_the_tests_if_mode_is_invalid(testdir, tmpdir):
 def test_picked_first_orders_tests_correctly(testdir, tmpdir):
     with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
         output = b" M test_flows.py\n M test_serializers.py\n"
-        subprocess_mock.return_value.stdout = output
+        subprocess_mock.return_value = output
 
         testdir.makepyfile(
             test_access="""
@@ -236,7 +237,7 @@ def test_picked_first_orders_tests_correctly(testdir, tmpdir):
 def test_picked_first_but_nothing_changed(testdir, tmpdir):
     with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
         output = b"\n"
-        subprocess_mock.return_value.stdout = output
+        subprocess_mock.return_value = output
 
         testdir.makepyfile(
             test_access="""

@@ -80,9 +80,11 @@ def pytest_collection_modifyitems(session, config, items):
 
 
 def _display_affected_tests(config, files, folders):
-    message = "Changed test {}... {}. {}"
-    files_msg = message.format("files", len(files), files)
-    folders_msg = message.format("folders", len(folders), folders)
+    def list_(value):
+        return ', '.join("'{}'".format(n) for n in value)
+    message = "Changed test {}... {}. [{}]"
+    files_msg = message.format("files", len(files), list_(files))
+    folders_msg = message.format("folders", len(folders), list_(folders))
     _write(config, [files_msg, folders_msg])
 
 

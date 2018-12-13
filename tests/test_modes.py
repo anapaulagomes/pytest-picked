@@ -59,7 +59,7 @@ class TestUnstaged:
         )
 
         with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
-            subprocess_mock.return_value.stdout = raw_output
+            subprocess_mock.return_value = raw_output
             mode = Unstaged(test_file_convention)
             files, folders = mode.affected_tests()
 
@@ -98,7 +98,7 @@ class TestBranch:
         test_file_convention = ["test_*.py", "*_test.py"]
 
         with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
-            subprocess_mock.return_value.stdout = raw_output
+            subprocess_mock.return_value = raw_output
             mode = Branch(test_file_convention)
             files, folders = mode.affected_tests()
 
