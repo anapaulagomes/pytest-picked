@@ -1,9 +1,11 @@
 import re
 import subprocess  # nosec
-from abc import ABC, abstractmethod
+import abc
+import six
 
 
-class Mode(ABC):
+@six.add_metaclass(abc.ABCMeta)
+class Mode(object):
 
     def __init__(self, test_file_convention):
         self.test_file_convention = test_file_convention
@@ -28,7 +30,7 @@ class Mode(ABC):
         return files, folders
 
     def git_output(self):
-        output = subprocess.run(self.command(), stdout=subprocess.PIPE)  # nosec
+        output = subprocess.check_output(self.command(), stdout=subprocess.PIPE)  # nosec
         return output.stdout.decode("utf-8")
 
     def print_command(self):
@@ -40,11 +42,11 @@ class Mode(ABC):
         )
 
     @property
-    @abstractmethod
+    @abc.abstractmethod
     def command(self):
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def parser(self, candidate):
         pass
 

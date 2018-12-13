@@ -1,7 +1,9 @@
-from unittest.mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 import pytest
-
 from pytest_picked.modes import Branch, Unstaged
 
 
@@ -56,7 +58,7 @@ class TestUnstaged:
             + b" M tests_new/intestine.py\n"
         )
 
-        with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
             subprocess_mock.return_value.stdout = raw_output
             mode = Unstaged(test_file_convention)
             files, folders = mode.affected_tests()
@@ -95,7 +97,7 @@ class TestBranch:
         )
         test_file_convention = ["test_*.py", "*_test.py"]
 
-        with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        with patch("pytest_picked.modes.subprocess.check_output") as subprocess_mock:
             subprocess_mock.return_value.stdout = raw_output
             mode = Branch(test_file_convention)
             files, folders = mode.affected_tests()
