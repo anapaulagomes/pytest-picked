@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+import os
 import pytest
 
 from pytest_picked.modes import Branch, Unstaged
@@ -78,7 +79,13 @@ class TestBranch:
         command = mode.command()
 
         assert isinstance(command, list)
-        assert mode.command() == ["git", "diff", "--name-only", "master"]
+        assert mode.command() == [
+            "git",
+            "diff",
+            "--name-only",
+            "--relative",
+            "master",
+        ]
 
     def test_parser_should_return_the_candidate_itself(self):
         mode = Branch([])
@@ -108,3 +115,61 @@ class TestBranch:
 
         assert files == expected_files
         assert folders == expected_folders
+
+    def test_should_list_changed_files(self, testdir):
+        # initialize a new git repo in testdir/gitroot
+        gitroot = testdir.mkdir("gitroot")
+        gitroot.chdir()
+        try:
+            assert testdir.run("git", "init").ret == 0
+        except FileNotFoundError:
+            pytest.skip("required executable 'git' not found")
+
+        # provide git-commit a valid committer and author
+        if "EMAIL" not in os.environ:
+            os.environ["EMAIL"] = "_"
+
+        # create master branch with empty initial commit
+        assert testdir.run("git", "commit", "--allow-empty", "-m_").ret == 0
+
+        # create a file to detect and add to git
+        gitroot.join("test_gitroot").new(ext="py").write(b"", "wb")
+        assert testdir.run("git", "add", ".").ret == 0
+
+        # assert only above file is detected
+        output = set(Branch([]).git_output().splitlines())
+        assert output == {"test_gitroot.py"}
+
+    def test_should_only_list_changed_files_under_pytest_root(self, testdir):
+        # initialize a new git repo in testdir/gitroot
+        gitroot = testdir.mkdir("gitroot")
+        gitroot.chdir()
+        try:
+            assert testdir.run("git", "init").ret == 0
+        except FileNotFoundError:
+            pytest.skip("required executable 'git' not found")
+
+        # provide git-commit a valid committer and author
+        if "EMAIL" not in os.environ:
+            os.environ["EMAIL"] = "_"
+
+        # create master branch with empty initial commit
+        assert testdir.run("git", "commit", "--allow-empty", "-m_").ret == 0
+
+        # create a file outside pytestroot
+        gitroot.join("test_gitroot").new(ext="py").write(b"", "wb")
+        # create testdir/gitroot/pytestroot
+        pytestroot = gitroot.mkdir("pytestroot")
+        # create a file inside pytestroot
+        pytestroot.join("test_pytestroot").new(ext="py").write(b"", "wb")
+        # add above changed files to git
+        assert testdir.run("git", "add", ".").ret == 0
+
+        # assert that all files are detected from gitroot
+        output = set(Branch([]).git_output().splitlines())
+        assert output == {"test_gitroot.py", "pytestroot/test_pytestroot.py"}
+
+        # assert that only one file is detected from pytestroot
+        pytestroot.chdir()
+        output = set(Branch([]).git_output().splitlines())
+        assert output == {"test_pytestroot.py"}
