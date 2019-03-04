@@ -1,4 +1,3 @@
-sudo: false
 language: python
 
 matrix:
@@ -12,6 +11,8 @@ install:
   - pip install tox
 
 script:
+  - black --check .
+  - isort --diff --check-only --recursive
   - tox -e $TOX_ENV
 
 before_cache:
