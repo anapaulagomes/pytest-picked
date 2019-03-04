@@ -6,6 +6,15 @@ import pytest
 from pytest_picked.modes import Branch, Unstaged
 
 
+@pytest.fixture
+def email():
+    _email = os.environ.pop("EMAIL", None)
+    os.environ["EMAIL"] = "_"
+    yield
+    if _email is not None:
+        os.environ["EMAIL"] = _email
+
+
 class TestUnstaged:
     def test_should_return_git_status_command(self):
         mode = Unstaged([])
@@ -116,17 +125,13 @@ class TestBranch:
         assert files == expected_files
         assert folders == expected_folders
 
-    def test_should_list_changed_files(self, testdir):
+    def test_should_list_changed_files(self, email, testdir):
         gitroot = testdir.mkdir("gitroot")
         gitroot.chdir()
         try:
             assert testdir.run("git", "init").ret == 0
         except FileNotFoundError:
             pytest.skip("required executable 'git' not found")
-
-        if "EMAIL" not in os.environ:
-            os.environ["EMAIL"] = "_"
-
         assert testdir.run("git", "commit", "--allow-empty", "-m_").ret == 0
 
         gitroot.join("test_gitroot").new(ext="py").write(b"", "wb")
@@ -135,17 +140,13 @@ class TestBranch:
         output = set(Branch([]).git_output().splitlines())
         assert output == {"test_gitroot.py"}
 
-    def test_should_only_list_changed_files_under_pytest_root(self, testdir):
+    def test_should_only_list_pytestroot_changed_files(self, email, testdir):
         gitroot = testdir.mkdir("gitroot")
         gitroot.chdir()
         try:
             assert testdir.run("git", "init").ret == 0
         except FileNotFoundError:
             pytest.skip("required executable 'git' not found")
-
-        if "EMAIL" not in os.environ:
-            os.environ["EMAIL"] = "_"
-
         assert testdir.run("git", "commit", "--allow-empty", "-m_").ret == 0
 
         gitroot.join("test_gitroot").new(ext="py").write(b"", "wb")
