@@ -1,8 +1,18 @@
 from unittest.mock import patch
 
+import os
 import pytest
 
 from pytest_picked.modes import Branch, Unstaged
+
+
+@pytest.fixture
+def email():
+    _email = os.environ.pop("EMAIL", None)
+    os.environ["EMAIL"] = "_"
+    yield
+    if _email is not None:
+        os.environ["EMAIL"] = _email
 
 
 class TestUnstaged:
@@ -78,7 +88,13 @@ class TestBranch:
         command = mode.command()
 
         assert isinstance(command, list)
-        assert mode.command() == ["git", "diff", "--name-only", "master"]
+        assert mode.command() == [
+            "git",
+            "diff",
+            "--name-only",
+            "--relative",
+            "master",
+        ]
 
     def test_parser_should_return_the_candidate_itself(self):
         mode = Branch([])
@@ -108,3 +124,39 @@ class TestBranch:
 
         assert files == expected_files
         assert folders == expected_folders
+
+    def test_should_list_changed_files(self, email, testdir):
+        gitroot = testdir.mkdir("gitroot")
+        gitroot.chdir()
+        try:
+            assert testdir.run("git", "init").ret == 0
+        except FileNotFoundError:
+            pytest.skip("required executable 'git' not found")
+        assert testdir.run("git", "commit", "--allow-empty", "-m_").ret == 0
+
+        gitroot.join("test_gitroot").new(ext="py").write(b"", "wb")
+        assert testdir.run("git", "add", ".").ret == 0
+
+        output = set(Branch([]).git_output().splitlines())
+        assert output == {"test_gitroot.py"}
+
+    def test_should_only_list_pytestroot_changed_files(self, email, testdir):
+        gitroot = testdir.mkdir("gitroot")
+        gitroot.chdir()
+        try:
+            assert testdir.run("git", "init").ret == 0
+        except FileNotFoundError:
+            pytest.skip("required executable 'git' not found")
+        assert testdir.run("git", "commit", "--allow-empty", "-m_").ret == 0
+
+        gitroot.join("test_gitroot").new(ext="py").write(b"", "wb")
+        pytestroot = gitroot.mkdir("pytestroot")
+        pytestroot.join("test_pytestroot").new(ext="py").write(b"", "wb")
+        assert testdir.run("git", "add", ".").ret == 0
+
+        output = set(Branch([]).git_output().splitlines())
+        assert output == {"test_gitroot.py", "pytestroot/test_pytestroot.py"}
+
+        pytestroot.chdir()
+        output = set(Branch([]).git_output().splitlines())
+        assert output == {"test_pytestroot.py"}
