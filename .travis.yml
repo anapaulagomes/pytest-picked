@@ -1,17 +1,21 @@
-sudo: false
 language: python
 
 matrix:
     include:
-      - python: 3.5
-        env: TOX_ENV=py35
       - python: 3.6
         env: TOX_ENV=py36
+      - python: 3.7
+        dist: xenial
+        sudo: true
+        env: TOX_ENV=py37
 
 install:
-  - pip install tox
+  - pip install -r requirements.txt
+  - pip install -r requirements_test.txt
 
 script:
+  - black --check .
+  - isort --diff --check-only --recursive
   - tox -e $TOX_ENV
 
 before_cache:
