@@ -1,4 +1,5 @@
 from unittest.mock import patch
+
 import pytest
 
 
@@ -153,10 +154,7 @@ def test_should_match_with_the_begin_of_path(testdir, tmpdir, tmpdir_factory):
         tmpdir.mkdir("othertests")
 
         result.stdout.fnmatch_lines(
-            [
-                "Changed test files... 0. []",
-                "Changed test folders... 1. ['tests/']",
-            ]
+            ["Changed test files... 0. []", "Changed test folders... 1. ['tests/']"]
         )
 
 
@@ -246,9 +244,4 @@ def test_picked_first_but_nothing_changed(testdir, tmpdir):
             """,
         )
         result = testdir.runpytest("--picked=first", "-v")
-        result.stdout.re_match_lines(
-            [
-                "test_access.py.+",
-                "test_flows.py.+",
-            ]
-        )
+        result.stdout.re_match_lines(["test_access.py.+", "test_flows.py.+"])

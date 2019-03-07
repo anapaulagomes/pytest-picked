@@ -1,4 +1,5 @@
 from fnmatch import fnmatch
+
 import _pytest
 
 from .modes import Branch, Unstaged
@@ -30,9 +31,7 @@ def pytest_addoption(parser):
 
 def _get_affected_paths(config):
     picked_mode = config.getoption("picked_mode")
-    test_file_convention = config._getini(  # pylint: disable=W0212
-        "python_files"
-    )
+    test_file_convention = config._getini("python_files")  # pylint: disable=W0212
 
     modes = {
         "branch": Branch(test_file_convention),
