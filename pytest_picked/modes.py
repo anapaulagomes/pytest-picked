@@ -50,7 +50,7 @@ class Mode(ABC):
 
 class Branch(Mode):
     def command(self):
-        return ["git", "diff", "--name-only", "master"]
+        return ["git", "diff", "--name-only", "--relative", "master"]
 
     def parser(self, candidate):
         """The candidate itself."""

@@ -1,22 +1,29 @@
-sudo: false
 language: python
-
 matrix:
-    include:
-      - python: 3.5
-        env: TOX_ENV=py35
-      - python: 3.6
-        env: TOX_ENV=py36
-
+  include:
+  - python: 3.6
+    env: TOX_ENV=py36
+  - python: 3.7
+    dist: xenial
+    sudo: true
+    env: TOX_ENV=py37
 install:
-  - pip install tox
-
+- pip install -r requirements.txt
+- pip install -r requirements_test.txt
 script:
-  - tox -e $TOX_ENV
-
+- black --check .
+- isort --diff --check-only --recursive
+- tox -e $TOX_ENV
 before_cache:
-  - rm -rf $HOME/.cache/pip/log
-
+- rm -rf $HOME/.cache/pip/log
 cache:
   directories:
-    - $HOME/.cache/pip
+  - "$HOME/.cache/pip"
+deploy:
+  provider: pypi
+  user: anapaulagomes
+  password:
+    secure: gbv/00LhRa15oVUXwtI4Tz0Axk/5laD9YV7mfc15PZYgei7vHun0DfOanE7Q8M9huAtIzP4o56A8sLx/GUSQe9WLSGpZtdo08W0AWtGIhFnzOZAMGGjGDEVC1WkLKF+LKoKEYd1JvJbXx9sXChBwNQMvGpRWz0+s0PyTb6gCPIYpoeZXviOJSTNaYUH4bzMOWGt0qTTLaZRL53Hma04Oc3Kte4vi3hv/b22oUZJuroiIFEacLPHobTjslmwKjx74gaKXWp+6NgKjbZ+pfdFutCB9vPcDjZX1OoPgIkNQ45zgqsXeDTCI1m7ufEhjYqM4ngF/vN2bpDg2BlUjG5g3JnyumEQ9VBxp9xBYzEmwqjP+rh4Kt1txf6e0QZ+UVHaRRs2tzN76lcCpxVXonJfaWe4SwxduW6NN1PD8UtYSGvVeGjxCJuC+LVShhD/fjtPARa7FqHMZKOLtoxSP22u/48MFmM9dsQajdaWn1nc74Sc8K8f8RRLGjUsQYaDk6/eHb8VUDdAWbHfuPptjCaHwYTSIzwnEWplmsG9dTZXXaByQvQz79avKS4eRxGzF7YnizPXdLIBJhuQjsUjgESUTBjOmUP5j9WDQ9eWsoX9wOqV08ivPmvX7VRElBKg7AKSYCHbwY5q1Kd723/yFHp3lgZeUZZNciH9NGcsogybEnzA=
+  on:
+    branch: master
+  skip_existing: true
