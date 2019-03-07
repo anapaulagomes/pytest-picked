@@ -3,7 +3,7 @@ repos:
     rev: master
     hooks:
     -   id: black
-        args: [--line-length=80, --check, .]
+        args: [--check, .]
         entry: black
         language: python
         language_version: python3
