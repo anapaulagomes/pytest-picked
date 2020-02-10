@@ -54,38 +54,35 @@ class Branch(Mode):
 
     def parser(self, candidate):
         """
-        Discard the first 8 characters.
+        Discard the first 3 characters.
 
-        Parse affected tests from Branch command.
+        Parse affected tests from Unstaged command.
         The command output would look like this:
-        D       .pyup.yml
-        M       pytest_picked/modes.py
-        M       requirements.txt
-        M       requirements_test.txt
-        M       tests/test_modes.py
-        R098    tests/test_pytest_picked.py     tests/test_pytest_picked.py
+        A  setup.py
+        U tests/test_pytest_picked.py
+        ?? .pylintrc
+        D  tests/migrations/auto.py
         The first two digits are M, A, D, R, C, U, ? or !
-        R and C include a percentage of how different the diffed file is, represented as 3 integers.
-        The rest of the characters up until the 9th character are spaces.
-        If the file was deleted it will have a D at the beginning of the line.
-        If the file was renamed, it will have 5 spaces between the filenames and look like this:
-        R100  school/migrations/from-school.csv     school/migrations/new-things-from-school.csv
+        The third is a white-space and the left is the path of
+        the file.
+        If the file was deleted it will have a D at the beginning
+        of the line. If the file was renamed, it will look like this:
+        R  school/migrations/from-school.csv -> new-things-from-school.csv
         Reference:
-        https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---name-status
+        https://git-scm.com/docs/git-status#git-status---short
         """
-        start_path_index = 8
-        rename_regex = "^R[0-9]\d\d {4}"
-        rename_seperator = "     "
-        delete_indicator = "D       "
-        deleted_and_renamed_indicator = "AD      "
+        start_path_index = 3
+        rename_indicator = "-> "
+        delete_indicator = " D "
+        deleted_and_renamed_indicator = "AD "
 
         if candidate.startswith(delete_indicator):
             return None
         if candidate.startswith(deleted_and_renamed_indicator):
             return None
-        if re.match(rename_regex, candidate):
-            indicator_index = candidate.find(rename_seperator)
-            start_path_index = indicator_index + len(rename_seperator)
+        if rename_indicator in candidate:
+            indicator_index = candidate.find(rename_indicator)
+            start_path_index = indicator_index + len(rename_indicator)
         return candidate[start_path_index:]
 
 
