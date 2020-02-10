@@ -83,15 +83,24 @@ class TestBranch:
         command = mode.command()
 
         assert isinstance(command, list)
-        assert mode.command() == ["git", "diff", "--name-status", "--relative", "master"]
+        assert mode.command() == [
+            "git",
+            "diff",
+            "--name-status",
+            "--relative",
+            "master",
+        ]
 
     @pytest.mark.parametrize(
         "line,expected_line",
         [
             ("D       tests/migrations/auto.py", None),
-            ("R098    tests/test_pytest_picked.py     tests/test_pytest_picked.py", "tests/test_pytest_picked.py"),
+            (
+                "R098    tests/test_pytest_picked.py     tests/test_pytest_picked.py",
+                "tests/test_pytest_picked.py",
+            ),
             ("M       test.py", "test.py"),
-            ("AD      test.py", None)
+            ("AD      test.py", None),
         ],
     )
     def test_parser_should_ignore_no_paths_characters(self, line, expected_line):
