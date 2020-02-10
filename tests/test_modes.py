@@ -83,7 +83,7 @@ class TestBranch:
         command = mode.command()
 
         assert isinstance(command, list)
-        assert mode.command() == ["git", "diff", "--name-only", "--relative", "master"]
+        assert mode.command() == ["git", "diff", "--name-status", "--relative", "master"]
 
     def test_parser_should_return_the_candidate_itself(self):
         mode = Branch([])
