@@ -83,7 +83,7 @@ class TestBranch:
         command = mode.command()
 
         assert isinstance(command, list)
-        assert mode.command() == ["git", "diff", "--name-status", "--relative", "master"]
+        assert mode.command() == ["git", "diff", "--name-only", "--relative", "master"]
 
     @pytest.mark.parametrize(
         "line,expected_line",
