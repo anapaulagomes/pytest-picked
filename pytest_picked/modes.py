@@ -50,11 +50,40 @@ class Mode(ABC):
 
 class Branch(Mode):
     def command(self):
-        return ["git", "diff", "--name-only", "--relative", "master"]
+        return ["git", "diff", "--name-status", "--relative", "master"]
 
     def parser(self, candidate):
-        """The candidate itself."""
-        return candidate
+        """
+        Discard the first 3 characters.
+
+        Parse affected tests from Unstaged command.
+        The command output would look like this:
+        A  setup.py
+        U tests/test_pytest_picked.py
+        ?? .pylintrc
+        D  tests/migrations/auto.py
+        The first two digits are M, A, D, R, C, U, ? or !
+        The third is a white-space and the left is the path of
+        the file.
+        If the file was deleted it will have a D at the beginning
+        of the line. If the file was renamed, it will look like this:
+        R  school/migrations/from-school.csv -> new-things-from-school.csv
+        Reference:
+        https://git-scm.com/docs/git-status#git-status---short
+        """
+        start_path_index = 3
+        rename_indicator = "-> "
+        delete_indicator = " D "
+        deleted_and_renamed_indicator = "AD "
+
+        if candidate.startswith(delete_indicator):
+            return None
+        if candidate.startswith(deleted_and_renamed_indicator):
+            return None
+        if rename_indicator in candidate:
+            indicator_index = candidate.find(rename_indicator)
+            start_path_index = indicator_index + len(rename_indicator)
+        return candidate[start_path_index:]
 
 
 class Unstaged(Mode):
