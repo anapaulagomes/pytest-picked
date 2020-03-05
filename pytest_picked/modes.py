@@ -75,7 +75,7 @@ class Branch(Mode):
         """
         start_path_index = 8
         rename_regex = r"^R[0-9]\d\d {4}"
-        rename_seperator = "     "
+        rename_separator = "     "
         delete_indicator = "D       "
         deleted_and_renamed_indicator = "AD      "
 
