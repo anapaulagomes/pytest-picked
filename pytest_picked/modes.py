@@ -83,9 +83,9 @@ class Branch(Mode):
             return
         if candidate.startswith(deleted_and_renamed_indicator):
             return
-        if re.match(rename_regex, candidate):
-            indicator_index = candidate.find(rename_seperator)
-            start_path_index = indicator_index + len(rename_seperator)
+        rename_matching = re.match(rename_regex, candidate)
+        if rename_matching:
+            return rename_matching.group(1)
         return candidate[start_path_index:]
 
 
