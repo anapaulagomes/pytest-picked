@@ -74,7 +74,7 @@ class Branch(Mode):
         https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---name-status
         """
         start_path_index = 8
-        rename_regex = "^R[0-9]\d\d {4}"
+        rename_regex = r"^R[0-9]\d\d {4}"
         rename_seperator = "     "
         delete_indicator = "D       "
         deleted_and_renamed_indicator = "AD      "
