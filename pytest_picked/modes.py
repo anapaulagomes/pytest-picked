@@ -74,8 +74,7 @@ class Branch(Mode):
         https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---name-status
         """
         start_path_index = 8
-        rename_regex = r"^R[0-9]\d\d {4}"
-        rename_separator = "     "
+        rename_regex = r"^R\d+.*\s{5}(.*)"
         delete_indicator = "D       "
         deleted_and_renamed_indicator = "AD      "
 
@@ -83,9 +82,10 @@ class Branch(Mode):
             return
         if candidate.startswith(deleted_and_renamed_indicator):
             return
+        rename_matching = re.match(rename_regex, candidate)
         if re.match(rename_regex, candidate):
-            indicator_index = candidate.find(rename_separator)
-            start_path_index = indicator_index + len(rename_separator)
+            if rename_matching:
+                return rename_matching.group(1)
         return candidate[start_path_index:]
 
 
