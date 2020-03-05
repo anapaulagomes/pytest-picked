@@ -80,7 +80,7 @@ class Branch(Mode):
         deleted_and_renamed_indicator = "AD      "
 
         if candidate.startswith(delete_indicator):
-            return None
+            return
         if candidate.startswith(deleted_and_renamed_indicator):
             return None
         if re.match(rename_regex, candidate):
