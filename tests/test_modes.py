@@ -122,7 +122,10 @@ class TestBranch:
             mode = Branch(test_file_convention)
             files, folders = mode.affected_tests()
 
-        expected_files = ["tests/test_new_pytest_picked.py", "tests/test_other_module.py"]
+        expected_files = [
+            "tests/test_new_pytest_picked.py",
+            "tests/test_other_module.py",
+        ]
         expected_folders = []
 
         assert files == expected_files
