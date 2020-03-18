@@ -83,20 +83,37 @@ class TestBranch:
         command = mode.command()
 
         assert isinstance(command, list)
-        assert mode.command() == ["git", "diff", "--name-only", "--relative", "master"]
+        assert mode.command() == [
+            "git",
+            "diff",
+            "--name-status",
+            "--relative",
+            "master",
+        ]
 
-    def test_parser_should_return_the_candidate_itself(self):
+    @pytest.mark.parametrize(
+        "line,expected_line",
+        [
+            ("D       tests/migrations/auto.py", None),
+            (
+                "R098    tests/test_pytest_picked.py     tests/test_pytest_picked.py",
+                "tests/test_pytest_picked.py",
+            ),
+            ("M       test.py", "test.py"),
+            ("AD      test.py", None),
+        ],
+    )
+    def test_parser_should_ignore_no_paths_characters(self, line, expected_line):
         mode = Branch([])
-        line = "tests/test_pytest_picked.py\n"
         parsed_line = mode.parser(line)
 
-        assert parsed_line == line
+        assert parsed_line == expected_line
 
     def test_should_list_branch_changed_files_as_affected_tests(self):
         raw_output = (
-            b"pytest_picked.py\n"
-            + b"tests/test_pytest_picked.py\n"
-            + b"tests/test_other_module.py"
+            b"D       pytest_picked.py\n"
+            + b"R066    tests/test_pytest_picked.py     tests/test_new_pytest_picked.py\n"
+            + b"M       tests/test_other_module.py"
         )
         test_file_convention = ["test_*.py", "*_test.py"]
 
@@ -105,7 +122,10 @@ class TestBranch:
             mode = Branch(test_file_convention)
             files, folders = mode.affected_tests()
 
-        expected_files = ["tests/test_pytest_picked.py", "tests/test_other_module.py"]
+        expected_files = [
+            "tests/test_new_pytest_picked.py",
+            "tests/test_other_module.py",
+        ]
         expected_folders = []
 
         assert files == expected_files
@@ -124,7 +144,7 @@ class TestBranch:
         assert testdir.run("git", "add", ".").ret == 0
 
         output = set(Branch([]).git_output().splitlines())
-        assert output == {"test_gitroot.py"}
+        assert output == {"A       test_gitroot.py"}
 
     def test_should_only_list_pytestroot_changed_files(self, email, testdir):
         gitroot = testdir.mkdir("gitroot")
@@ -141,8 +161,11 @@ class TestBranch:
         assert testdir.run("git", "add", ".").ret == 0
 
         output = set(Branch([]).git_output().splitlines())
-        assert output == {"test_gitroot.py", "pytestroot/test_pytestroot.py"}
+        assert output == {
+            "A       test_gitroot.py",
+            "A       pytestroot/test_pytestroot.py",
+        }
 
         pytestroot.chdir()
         output = set(Branch([]).git_output().splitlines())
-        assert output == {"test_pytestroot.py"}
+        assert output == {"A       test_pytestroot.py"}

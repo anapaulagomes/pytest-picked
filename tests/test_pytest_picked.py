@@ -160,7 +160,7 @@ def test_should_match_with_the_begin_of_path(testdir, tmpdir, tmpdir_factory):
 
 def test_should_accept_branch_as_mode(testdir, tmpdir):
     with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
-        output = b"test_flows.py\ntest_serializers.py\n"
+        output = b"M       test_flows.py\nA       test_serializers.py\n"
         subprocess_mock.return_value.stdout = output
 
         result = testdir.runpytest("--picked", "--mode=branch")
