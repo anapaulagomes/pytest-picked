@@ -144,7 +144,7 @@ class TestBranch:
         assert testdir.run("git", "add", ".").ret == 0
 
         output = set(Branch([]).git_output().splitlines())
-        assert output == {"A\ttest_gitroot.py"}
+        assert output == {"A       test_gitroot.py"}
 
     def test_should_only_list_pytestroot_changed_files(self, email, testdir):
         gitroot = testdir.mkdir("gitroot")
@@ -161,8 +161,8 @@ class TestBranch:
         assert testdir.run("git", "add", ".").ret == 0
 
         output = set(Branch([]).git_output().splitlines())
-        assert output == {"A\ttest_gitroot.py", "A\tpytestroot/test_pytestroot.py"}
+        assert output == {"A       test_gitroot.py", "A       pytestroot/test_pytestroot.py"}
 
         pytestroot.chdir()
         output = set(Branch([]).git_output().splitlines())
-        assert output == {"A\ttest_pytestroot.py"}
+        assert output == {"A       test_pytestroot.py"}

@@ -28,7 +28,8 @@ class Mode(ABC):
 
     def git_output(self):
         output = subprocess.run(self.command(), stdout=subprocess.PIPE)  # nosec
-        return output.stdout.decode("utf-8")
+        return output.stdout.decode("utf-8").expandtabs()
+
 
     def print_command(self):
         return " ".join(self.command())
