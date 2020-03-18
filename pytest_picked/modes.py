@@ -30,7 +30,6 @@ class Mode(ABC):
         output = subprocess.run(self.command(), stdout=subprocess.PIPE)  # nosec
         return output.stdout.decode("utf-8").expandtabs()
 
-
     def print_command(self):
         return " ".join(self.command())
 

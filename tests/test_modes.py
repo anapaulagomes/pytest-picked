@@ -161,7 +161,10 @@ class TestBranch:
         assert testdir.run("git", "add", ".").ret == 0
 
         output = set(Branch([]).git_output().splitlines())
-        assert output == {"A       test_gitroot.py", "A       pytestroot/test_pytestroot.py"}
+        assert output == {
+            "A       test_gitroot.py",
+            "A       pytestroot/test_pytestroot.py",
+        }
 
         pytestroot.chdir()
         output = set(Branch([]).git_output().splitlines())
