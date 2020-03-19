@@ -26,7 +26,7 @@ class TestUnstaged:
     @pytest.mark.parametrize(
         "line,expected_line",
         [
-            (" D tests/migrations/auto.py", None),
+            ("D  tests/migrations/auto.py", None),
             ("R  tests/from-school.csv -> test_new_things.py", "test_new_things.py"),
             (
                 "R  tests/from-school.csv -> tests/test_new_things.py",
