@@ -14,6 +14,10 @@ pytest-picked
     :target: https://pypi.org/project/pytest-picked/
     :alt: See Package Status on PyPI
 
+.. image:: https://github.com/anapaulagomes/pytest-picked/workflows/Upload%20Python%20Package/badge.svg
+    :target: https://test.pypi.org/project/pytest-picked/
+    :alt: See Package Status on Test PyPI
+
 .. image:: https://img.shields.io/conda/vn/conda-forge/pytest-picked.svg
     :target: https://anaconda.org/conda-forge/pytest-picked
     :alt: Conda forge package
