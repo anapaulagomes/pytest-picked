@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.4.4] - 2020-03-21
+### Fixed
+- Fix branch mode for renaming cases (#77)
+
 ## [0.4.3] - 2020-03-20
 ### Fixed
 - Fix delete indicator for unstagged mode (#75)
@@ -33,7 +37,8 @@
 ### Added
 - Run the tests according with changed files
 
-[Unreleased]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.3...HEAD
+[Unreleased]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.4...HEAD
+[0.4.4]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.1...v0.4.3
 [0.4.1]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/anapaulagomes/pytest-picked/compare/v0.3.2...v0.4.0
