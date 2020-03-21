@@ -28,7 +28,7 @@ class Mode(ABC):
 
     def git_output(self):
         output = subprocess.run(self.command(), stdout=subprocess.PIPE)  # nosec
-        return output.stdout.decode("utf-8")
+        return output.stdout.decode("utf-8").expandtabs()
 
     def print_command(self):
         return " ".join(self.command())
@@ -50,11 +50,43 @@ class Mode(ABC):
 
 class Branch(Mode):
     def command(self):
-        return ["git", "diff", "--name-only", "--relative", "master"]
+        return ["git", "diff", "--name-status", "--relative", "master"]
 
     def parser(self, candidate):
-        """The candidate itself."""
-        return candidate
+        """
+        Discard the first 8 characters.
+
+        Parse affected tests from Branch command.
+        The command output would look like this:
+        D       .pyup.yml
+        M       pytest_picked/modes.py
+        M       requirements.txt
+        M       requirements_test.txt
+        M       tests/test_modes.py
+        R098    tests/test_pytest_picked.py     tests/test_pytest_picked.py
+        The first two digits are M, A, D, R, C, U, ? or !
+        R and C include a percentage of how different the diffed file is, represented as 3 integers.
+        The rest of the characters up until the 9th character are spaces.
+        If the file was deleted it will have a D at the beginning of the line.
+        If the file was renamed, it will have multiple spaces between the filenames and look like this:
+        R100  school/migrations/from-school.csv     school/migrations/new-things-from-school.csv
+        The number of spaces are dependent on the length of the filenames.
+        Reference:
+        https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---name-status
+        """
+        start_path_index = 8
+        rename_regex = r"^R\d+.*\s+(.*)"
+        delete_indicator = "D       "
+        deleted_and_renamed_indicator = "AD      "
+
+        if candidate.startswith(delete_indicator):
+            return
+        if candidate.startswith(deleted_and_renamed_indicator):
+            return
+        rename_matching = re.match(rename_regex, candidate)
+        if rename_matching:
+            return rename_matching.group(1)
+        return candidate[start_path_index:]
 
 
 class Unstaged(Mode):
@@ -82,13 +114,13 @@ class Unstaged(Mode):
         """
         start_path_index = 3
         rename_indicator = "-> "
-        delete_indicator = " D "
+        delete_indicator = "D  "
         deleted_and_renamed_indicator = "AD "
 
         if candidate.startswith(delete_indicator):
-            return None
+            return
         if candidate.startswith(deleted_and_renamed_indicator):
-            return None
+            return
         if rename_indicator in candidate:
             indicator_index = candidate.find(rename_indicator)
             start_path_index = indicator_index + len(rename_indicator)
