@@ -68,13 +68,14 @@ class Branch(Mode):
         R and C include a percentage of how different the diffed file is, represented as 3 integers.
         The rest of the characters up until the 9th character are spaces.
         If the file was deleted it will have a D at the beginning of the line.
-        If the file was renamed, it will have 5 spaces between the filenames and look like this:
+        If the file was renamed, it will have multiple spaces between the filenames and look like this:
         R100  school/migrations/from-school.csv     school/migrations/new-things-from-school.csv
+        The number of spaces are dependent on the length of the filenames.
         Reference:
         https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---name-status
         """
         start_path_index = 8
-        rename_regex = r"^R\d+.*\s{5}(.*)"
+        rename_regex = r"^R\d+.*\s+(.*)"
         delete_indicator = "D       "
         deleted_and_renamed_indicator = "AD      "
 
