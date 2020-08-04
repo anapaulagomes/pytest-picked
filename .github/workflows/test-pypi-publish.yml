@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-
+    if: startsWith(github.event.head_commit.message, 'Bump')
     runs-on: ubuntu-latest
 
     steps:
