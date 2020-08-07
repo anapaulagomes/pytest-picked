@@ -1,5 +1,6 @@
 -r requirements.txt
 black==19.10b0
 isort==5.2.2
-pylint==2.5.3
+pytest-black==0.3.8
+pytest-flake8==1.0.4
 tox==3.18.1
