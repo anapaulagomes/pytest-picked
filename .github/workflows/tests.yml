@@ -5,17 +5,17 @@ on: [push]
 jobs:
   lint:
     name: Lint
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-python@v2
-        - name: Install dependencies
-          run: python -m pip install -r requirements_test.txt
-        - name: Lint
-          run: |
-            black --check .
-            flake8 .
-            isort **/*.py -c
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: python -m pip install -r requirements_test.txt
+      - name: Lint
+        run: |
+          black --check .
+          flake8 .
+          isort **/*.py -c
   linux_tests:
     name: Linux - Python ${{ matrix.python-version }}
     needs: lint
