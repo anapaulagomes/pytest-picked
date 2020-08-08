@@ -14,7 +14,7 @@ def read(fname):
 
 setup(
     name="pytest-picked",
-    version="0.4.4",
+    version="0.4.5",
     author="Ana Paula Gomes",
     author_email="apgomes88@gmail.com",
     maintainer="Ana Paula Gomes",
@@ -34,9 +34,7 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: Implementation :: CPython",
-        "Programming Language :: Python :: Implementation :: PyPy",
-        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: MIT License",
     ],
     entry_points={"pytest11": ["picked = pytest_picked.plugin"]},

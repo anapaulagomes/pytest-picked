@@ -1,0 +1,58 @@
+name: Tests
+
+on: [push]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: python -m pip install -r requirements_test.txt
+      - name: Lint
+        run: |
+          black --check .
+          flake8 .
+          isort **/*.py -c
+  linux_tests:
+    name: Linux - Python ${{ matrix.python-version }}
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade tox tox-gh-actions
+          python -m pip install -r requirements_test.txt
+      - name: Run tox targets for ${{ matrix.python-version }}
+        run: python -m tox
+  windows_tests:
+    name: Windows - Python ${{ matrix.python-version }}
+    needs: linux_tests
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade tox tox-gh-actions
+          python -m pip install -r requirements_test.txt
+      - name: Run tox targets for ${{ matrix.python-version }}
+        run: python -m tox

@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Modified
+- Add fixture for git user configuration
 
 ## [0.4.4] - 2020-03-21
 ### Fixed

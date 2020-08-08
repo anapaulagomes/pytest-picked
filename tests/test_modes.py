@@ -1,4 +1,3 @@
-import os
 from unittest.mock import patch
 
 import pytest
@@ -7,12 +6,22 @@ from pytest_picked.modes import Branch, Unstaged
 
 
 @pytest.fixture
-def email():
-    _email = os.environ.pop("EMAIL", None)
-    os.environ["EMAIL"] = "_"
-    yield
-    if _email is not None:
-        os.environ["EMAIL"] = _email
+def git_repository(testdir):
+    gitroot = testdir.mkdir("gitroot")
+    gitroot.chdir()
+
+    try:
+        assert testdir.run("git", "init").ret == 0
+    except FileNotFoundError:
+        pytest.skip("required executable 'git' not found")
+    else:
+        git_user = ["git", "config", "user.name", "Pytest Picked"]
+        git_email = ["git", "config", "user.email", "picked@pytest.com"]
+        assert testdir.run(*git_user).ret == 0
+        assert testdir.run(*git_email).ret == 0
+
+    assert testdir.run("git", "commit", "--allow-empty", "-m_").ret == 0
+    yield gitroot
 
 
 class TestUnstaged:
@@ -96,7 +105,8 @@ class TestBranch:
         [
             ("D       tests/migrations/auto.py", None),
             (
-                "R098    tests/test_pytest_picked.py     tests/test_pytest_picked.py",
+                "R098    tests/test_pytest_picked.py     "
+                "tests/test_pytest_picked.py",
                 "tests/test_pytest_picked.py",
             ),
             ("M       test.py", "test.py"),
@@ -112,8 +122,9 @@ class TestBranch:
     def test_should_list_branch_changed_files_as_affected_tests(self):
         raw_output = (
             b"D       pytest_picked.py\n"
-            + b"R066    tests/test_pytest_picked.py     tests/test_new_pytest_picked.py\n"
-            + b"M       tests/test_other_module.py"
+            b"R066    tests/test_pytest_picked.py     "
+            b"tests/test_new_pytest_picked.py\n"
+            b"M       tests/test_other_module.py"
         )
         test_file_convention = ["test_*.py", "*_test.py"]
 
@@ -131,32 +142,16 @@ class TestBranch:
         assert files == expected_files
         assert folders == expected_folders
 
-    def test_should_list_changed_files(self, email, testdir):
-        gitroot = testdir.mkdir("gitroot")
-        gitroot.chdir()
-        try:
-            assert testdir.run("git", "init").ret == 0
-        except FileNotFoundError:
-            pytest.skip("required executable 'git' not found")
-        assert testdir.run("git", "commit", "--allow-empty", "-m_").ret == 0
-
-        gitroot.join("test_gitroot").new(ext="py").write(b"", "wb")
+    def test_should_list_changed_files(self, testdir, git_repository):
+        git_repository.join("test_gitroot").new(ext="py").write(b"", "wb")
         assert testdir.run("git", "add", ".").ret == 0
 
         output = set(Branch([]).git_output().splitlines())
         assert output == {"A       test_gitroot.py"}
 
-    def test_should_only_list_pytestroot_changed_files(self, email, testdir):
-        gitroot = testdir.mkdir("gitroot")
-        gitroot.chdir()
-        try:
-            assert testdir.run("git", "init").ret == 0
-        except FileNotFoundError:
-            pytest.skip("required executable 'git' not found")
-        assert testdir.run("git", "commit", "--allow-empty", "-m_").ret == 0
-
-        gitroot.join("test_gitroot").new(ext="py").write(b"", "wb")
-        pytestroot = gitroot.mkdir("pytestroot")
+    def test_should_only_list_pytest_root_changed_files(self, git_repository, testdir):
+        git_repository.join("test_gitroot").new(ext="py").write(b"", "wb")
+        pytestroot = git_repository.mkdir("pytestroot")
         pytestroot.join("test_pytestroot").new(ext="py").write(b"", "wb")
         assert testdir.run("git", "add", ".").ret == 0
 
