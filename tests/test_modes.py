@@ -105,7 +105,8 @@ class TestBranch:
         [
             ("D       tests/migrations/auto.py", None),
             (
-                "R098    tests/test_pytest_picked.py     tests/test_pytest_picked.py",
+                "R098    tests/test_pytest_picked.py     "
+                "tests/test_pytest_picked.py",
                 "tests/test_pytest_picked.py",
             ),
             ("M       test.py", "test.py"),
@@ -121,8 +122,9 @@ class TestBranch:
     def test_should_list_branch_changed_files_as_affected_tests(self):
         raw_output = (
             b"D       pytest_picked.py\n"
-            + b"R066    tests/test_pytest_picked.py     tests/test_new_pytest_picked.py\n"
-            + b"M       tests/test_other_module.py"
+            b"R066    tests/test_pytest_picked.py     "
+            b"tests/test_new_pytest_picked.py\n"
+            b"M       tests/test_other_module.py"
         )
         test_file_convention = ["test_*.py", "*_test.py"]
 
