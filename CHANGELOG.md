@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Modified
 - Add fixture for git user configuration
+- Skip "Publish to Test PyPi" workflow when there is no change on setup.py
 
 ## [0.4.4] - 2020-03-21
 ### Fixed
