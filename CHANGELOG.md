@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased] - 2020-10-03
+### Modified publish_to_test_pypi.yml
+- Skip "Publish to Test PyPi" workflow when there is no change on setup.py
+
 ## [Unreleased]
 ### Modified
 - Add fixture for git user configuration
