@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 import pytest
 
-from pytest_picked.modes import Branch, Unstaged
+from pytest_picked.modes import Branch, OnlyChanged, Unstaged
 
 
 @pytest.fixture
@@ -164,3 +164,69 @@ class TestBranch:
         pytestroot.chdir()
         output = set(Branch([]).git_output().splitlines())
         assert output == {"A       test_pytestroot.py"}
+
+
+class TestOnlyChanged:
+    def test_should_return_git_diff_command(self):
+        mode = OnlyChanged([])
+        command = mode.command()
+
+        assert isinstance(command, list)
+        assert mode.command() == ["git", "diff"]
+
+    @pytest.mark.parametrize(
+        "line,expected_line",
+        [
+            (
+                "@@ -191,29 +191,8 @@ class TestPytestPicked:",
+                "@@ -191,29 +191,8 @@ class TestPytestPicked:",
+            ),
+            ("-    def test_positive_update_limit(self):", None),
+            ("--- a/tests/foreman/cli/test_host_collection.py", None),
+            (
+                "+++ b/tests/pytestpicked/test_positive",
+                "tests/pytestpicked/test_positive",
+            ),
+            ("+    @pytest.mark.tier2", "+    @pytest.mark.tier2"),
+            ("+    def test", "+    def test"),
+            ("-def test_positive", None),
+        ],
+    )
+    def test_parser_should_ignore_no_paths_characters(self, line, expected_line):
+        mode = OnlyChanged([])
+        parsed_line = mode.parser(line)
+
+        assert parsed_line == expected_line
+
+    def test_should_list_changed_tests(self):
+        raw_output = (
+            b"\n+++ b/tests/pytestpicked/test_modes1.py"
+            b"\n@@ -191,29 +191,8 @@ class TestPytestPicked(CLITestCase):"
+            b"\n+    def test_with_class(self):"
+            b"\n+++ b/tests/pytestpicked/test_modes2.py"
+            b"\n@@ -191,29 +191,8 @@ class TestPytestPicked:"
+            b"\n+    def test_with_class(self):"
+            b"\n+++ b/tests/pytestpicked/test_modes3.py"
+            b"\n+    def test_without_class(self):"
+            b"\n+++ b/tests/pytestpicked/test_modes4.py"
+            b"\n+    def invalid_function(self):"
+            b"\n+++ b/tests/pytestpicked/test_modes5.py"
+            b"\n+    def invalid_test(self):"
+            b"\n+++ b/tests/pytestpicked/test_modes6.py"
+            b"\n@@ -191,29 +191,8 @@ class InvalidClass:"
+        )
+        test_file_convention = ["test_*.py", "*_test.py"]
+
+        with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+            subprocess_mock.return_value.stdout = raw_output
+            mode = OnlyChanged(test_file_convention)
+            tests, folders = mode.only_tests()
+        expected_tests = [
+            "tests/pytestpicked/test_modes1.py::TestPytestPicked",
+            "tests/pytestpicked/test_modes1.py::test_with_class",
+            "tests/pytestpicked/test_modes2.py::TestPytestPicked",
+            "tests/pytestpicked/test_modes2.py::test_with_class",
+            "tests/pytestpicked/test_modes3.py::test_without_class",
+        ]
+
+        assert tests == expected_tests

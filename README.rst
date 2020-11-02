@@ -87,6 +87,7 @@ Usage
 
   $ pytest --picked --mode=unstaged  # default
 
+  $ pytest --picked --mode=onlychanged
 
 Features
 --------

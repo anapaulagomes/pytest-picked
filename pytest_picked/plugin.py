@@ -2,7 +2,7 @@ from fnmatch import fnmatch
 
 import _pytest
 
-from .modes import Branch, Unstaged
+from .modes import Branch, OnlyChanged, Unstaged
 
 
 def pytest_addoption(parser):
@@ -25,7 +25,7 @@ def pytest_addoption(parser):
         dest="picked_mode",
         default="unstaged",
         required=False,
-        help="Options: unstaged, branch",
+        help="Options: unstaged, branch, onlychanged",
     )
 
 
@@ -36,6 +36,7 @@ def _get_affected_paths(config):
     modes = {
         "branch": Branch(test_file_convention),
         "unstaged": Unstaged(test_file_convention),
+        "onlychanged": OnlyChanged(test_file_convention),
     }
     try:
         mode = modes[picked_mode]
@@ -45,7 +46,10 @@ def _get_affected_paths(config):
         config.args = []
         raise ValueError(error)
     else:
-        return mode.affected_tests()
+        if picked_mode == "onlychanged":
+            return mode.only_tests()
+        else:
+            return mode.affected_tests()
 
 
 def pytest_configure(config):
@@ -62,7 +66,6 @@ def pytest_collection_modifyitems(session, config, items):
     picked_type = config.getoption("picked")
     if not picked_type or picked_type != "first":
         return
-
     affected_files, affected_folders = _get_affected_paths(config)
     match_paths = affected_files + affected_folders
     # only reorder if there was anything matched

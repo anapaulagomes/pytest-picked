@@ -9,7 +9,6 @@ class Mode(ABC):
 
     def affected_tests(self):
         raw_output = self.git_output()
-
         re_list = [
             item.replace(".", r"\.").replace("*", ".*")
             for item in self.test_file_convention
@@ -25,6 +24,45 @@ class Mode(ABC):
                 elif re.search(re_string, file_or_folder):
                     files.append(file_or_folder)
         return files, folders
+
+    def only_tests(self):
+        raw_output = self.git_output()
+        re_list = [
+            item.replace(".", r"\.").replace("*", ".*")
+            for item in self.test_file_convention
+        ]
+        test_file_regex = r"(\/|^)" + r"|".join(re_list)
+        test_class_regex = r"(?<=class\s).*Test.*.[\w](?=\(|\:)"
+        test_regex = r"(?<=def\s)test.*(?=\(|/:)"
+
+        tests = []
+        last_file_name = None
+        file_dict = {}
+        class_name = ""
+        for candidate in raw_output.splitlines():
+            file_or_test = self.parser(candidate)
+            if file_or_test:
+                if re.search(test_file_regex, file_or_test):
+                    last_file_name = file_or_test
+                    if last_file_name not in file_dict.keys():
+                        file_dict[last_file_name] = []
+                if re.search(test_class_regex, file_or_test):
+                    match = re.findall(test_class_regex, file_or_test)
+                    class_name = match[0]
+                    file_dict[last_file_name].append(class_name)
+
+                elif re.search(test_regex, file_or_test):
+                    match = re.findall(test_regex, file_or_test)
+                    test_name = match[0]
+                    file_dict[last_file_name].append(class_name + "::" + test_name)
+            class_name = ""
+        for file_name in file_dict.keys():
+            for test_name in file_dict[file_name]:
+                tests.append(
+                    file_name + "::" + test_name
+                ) if "::" not in test_name else tests.append(file_name + test_name)
+
+        return list(dict.fromkeys(tests)), []
 
     def git_output(self):
         output = subprocess.run(self.command(), stdout=subprocess.PIPE)  # nosec
@@ -127,3 +165,36 @@ class Unstaged(Mode):
             indicator_index = candidate.find(rename_indicator)
             start_path_index = indicator_index + len(rename_indicator)
         return candidate[start_path_index:]
+
+
+class OnlyChanged(Mode):
+    def command(self):
+        return ["git", "diff"]
+
+    def parser(self, candidate):
+        """
+        Discard the first 6 characters in case of file name.
+
+        Parse the modified file using the file indicator '+++ b/'
+        Parse affected tests from using regex 'def' and '@@'
+        The command output would look like this:
+        diff --git a/tests/migrations/auto.py b/tests/migrations/auto.py
+        index 2ce07c4..ebd406e 100644
+        --- a/tests/migrations/auto.py
+        +++ b/tests/migrations/auto.py
+        @@ -181,6 +181,7 @@ def test_positive_migration(session, ad_data):
+
+        Reference:
+        https://git-scm.com/docs/git-diff#git-diff
+        """
+        start_path_index = 6
+        file_indicator = "+++ b/"
+        modified_test_indicator = "@@ "
+        new_test_indicator = "+"
+
+        if candidate.startswith(file_indicator):
+            return candidate[start_path_index:]
+        if candidate.startswith(modified_test_indicator):
+            return candidate
+        if candidate.startswith(new_test_indicator):
+            return candidate
