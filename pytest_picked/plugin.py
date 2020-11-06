@@ -27,14 +27,22 @@ def pytest_addoption(parser):
         required=False,
         help="Options: unstaged, branch",
     )
+    group.addoption(
+        "--parent_branch",
+        action="store",
+        default="master",
+        required=False,
+        help="The main branch of your repo (master, main, trunk, etc)",
+    )
 
 
 def _get_affected_paths(config):
     picked_mode = config.getoption("picked_mode")
+    parent_branch = config.getoption("parent_branch")
     test_file_convention = config._getini("python_files")  # pylint: disable=W0212
 
     modes = {
-        "branch": Branch(test_file_convention),
+        "branch": Branch(test_file_convention, parent_branch),
         "unstaged": Unstaged(test_file_convention),
     }
     try:

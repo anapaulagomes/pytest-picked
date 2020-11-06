@@ -49,8 +49,12 @@ class Mode(ABC):
 
 
 class Branch(Mode):
+    def __init__(self, test_file_convention, parent_branch="master"):
+        super().__init__(test_file_convention)
+        self.parent_branch = parent_branch
+
     def command(self):
-        return ["git", "diff", "--name-only", "--relative", "master"]
+        return ["git", "diff", "--name-only", "--relative", self.parent_branch]
 
     def parser(self, candidate):
         """The candidate itself."""
