@@ -54,7 +54,7 @@ class Branch(Mode):
         self.parent_branch = parent_branch
 
     def command(self):
-        return ["git", "diff", "--name-only", "--relative", self.parent_branch]
+        return ["git", "diff", "--name-status", "--relative", self.parent_branch]
 
     def parser(self, candidate):
         """The candidate itself."""
