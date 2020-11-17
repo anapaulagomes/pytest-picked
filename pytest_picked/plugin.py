@@ -28,7 +28,7 @@ def pytest_addoption(parser):
         help="Options: unstaged, branch",
     )
     group.addoption(
-        "--parent_branch",
+        "--parent-branch",
         action="store",
         default="master",
         required=False,

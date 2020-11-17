@@ -87,6 +87,8 @@ Usage
 
   $ pytest --picked --mode=unstaged  # default
 
+  $ pytest --picked --mode=branch --parent-branch=main # if your parent branch differs from "master"
+
 
 Features
 --------
