@@ -92,7 +92,7 @@ class TestBranch:
         ]
 
     def test_should_return_command_that_list_all_changed_files_for_different_branch(
-        self
+        self,
     ):
         mode = Branch([], "main")
         command = mode.command()
