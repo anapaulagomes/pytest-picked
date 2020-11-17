@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.4.5] - 2020-11-17
+### Added
+- Add optional parameter, `--parent-branch`, to point to different parent branch (#113)
+
 ## [0.4.4] - 2020-03-21
 ### Fixed
 - Fix branch mode for renaming cases (#77)
