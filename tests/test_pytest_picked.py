@@ -245,3 +245,30 @@ def test_picked_first_but_nothing_changed(testdir, tmpdir):
         )
         result = testdir.runpytest("--picked=first", "-v")
         result.stdout.re_match_lines(["test_access.py.+", "test_flows.py.+"])
+
+
+def test_should_accept_different_parent_branch_param(testdir, tmpdir):
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        output = b"M       test_flows.py\nA       test_serializers.py\n"
+        subprocess_mock.return_value.stdout = output
+
+        result = testdir.runpytest("--picked", "--mode=branch", "--parent-branch=main")
+        testdir.makepyfile(
+            ".py",
+            test_flows="""
+            def test_sth():
+                assert True
+            """,
+            test_serializers="""
+            def test_sth():
+                assert True
+            """,
+        )
+        tmpdir.mkdir("tests")
+        result.stdout.fnmatch_lines(
+            [
+                "Changed test files... 2. "
+                + "['test_flows.py', 'test_serializers.py']",
+                "Changed test folders... 0. []",
+            ]
+        )

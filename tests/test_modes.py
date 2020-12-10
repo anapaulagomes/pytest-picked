@@ -100,6 +100,15 @@ class TestBranch:
             "master",
         ]
 
+    def test_should_return_command_that_list_all_changed_files_for_different_branch(
+        self,
+    ):
+        mode = Branch([], "main")
+        command = mode.command()
+
+        assert isinstance(command, list)
+        assert mode.command() == ["git", "diff", "--name-status", "--relative", "main"]
+
     @pytest.mark.parametrize(
         "line,expected_line",
         [
