@@ -53,7 +53,8 @@ class TestUnstaged:
         assert parsed_line == expected_line
 
     def test_should_list_unstaged_changed_files_as_affected_tests(self):
-        test_file_convention = ["test_*.py", "*_test.py"]
+        test_conventions = dict()
+        test_conventions["file"] = ["test_*.py", "*_test.py"]
         raw_output = (
             b"R  school/migrations/from-school.csv -> test_new_things.py\n"
             + b"D  school/migrations/0032_auto_20180515_1308.py\n"
@@ -72,7 +73,7 @@ class TestUnstaged:
 
         with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
             subprocess_mock.return_value.stdout = raw_output
-            mode = Unstaged(test_file_convention)
+            mode = Unstaged(test_conventions)
             files, folders = mode.affected_tests()
 
         expected_files = [
@@ -126,11 +127,12 @@ class TestBranch:
             b"tests/test_new_pytest_picked.py\n"
             b"M       tests/test_other_module.py"
         )
-        test_file_convention = ["test_*.py", "*_test.py"]
+        test_conventions = dict()
+        test_conventions["file"] = ["test_*.py", "*_test.py"]
 
         with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
             subprocess_mock.return_value.stdout = raw_output
-            mode = Branch(test_file_convention)
+            mode = Branch(test_conventions)
             files, folders = mode.affected_tests()
 
         expected_files = [
@@ -203,9 +205,14 @@ class TestOnlyChanged:
             b"\n+++ b/tests/pytestpicked/test_modes1.py"
             b"\n@@ -191,29 +191,8 @@ class TestPytestPicked(CLITestCase):"
             b"\n+    def test_with_class(self):"
+            b"\n+++ b/tests/pytestpicked/test_modes1.py"
+            b"\n@@ -191,29 +191,8 @@ class TestPytestPicked(CLITestCase):"
+            b"\n+++ b/tests/pytestpicked/test_modes1.py"
+            b"\n+    def test_with_duplicate_classes(self):"
             b"\n+++ b/tests/pytestpicked/test_modes2.py"
             b"\n@@ -191,29 +191,8 @@ class TestPytestPicked:"
-            b"\n+    def test_with_class(self):"
+            b"\n+    def test_with_class_1(self):"
+            b"\n+    def test_with_class_2(self):"
             b"\n+++ b/tests/pytestpicked/test_modes3.py"
             b"\n+    def test_without_class(self):"
             b"\n+++ b/tests/pytestpicked/test_modes4.py"
@@ -215,17 +222,18 @@ class TestOnlyChanged:
             b"\n+++ b/tests/pytestpicked/test_modes6.py"
             b"\n@@ -191,29 +191,8 @@ class InvalidClass:"
         )
-        test_file_convention = ["test_*.py", "*_test.py"]
+        test_conventions = dict()
+        test_conventions["file"] = ["test_*.py", "*_test.py"]
+        test_conventions["class"] = ["Test", "Check"]
+        test_conventions["function"] = ["test", "check_*"]
 
         with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
             subprocess_mock.return_value.stdout = raw_output
-            mode = OnlyChanged(test_file_convention)
-            tests, folders = mode.only_tests()
+            mode = OnlyChanged(test_conventions, True)
+            tests, folders = mode.affected_tests()
         expected_tests = [
             "tests/pytestpicked/test_modes1.py::TestPytestPicked",
-            "tests/pytestpicked/test_modes1.py::test_with_class",
             "tests/pytestpicked/test_modes2.py::TestPytestPicked",
-            "tests/pytestpicked/test_modes2.py::test_with_class",
             "tests/pytestpicked/test_modes3.py::test_without_class",
         ]
 

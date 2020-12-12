@@ -4,41 +4,32 @@ from abc import ABC, abstractmethod
 
 
 class Mode(ABC):
-    def __init__(self, test_file_convention):
-        self.test_file_convention = test_file_convention
+    def __init__(self, test_conventions, only_modified_tests=False):
+        self.test_conventions = test_conventions
+        self.only_modified_tests = only_modified_tests
 
-    def affected_tests(self):
-        raw_output = self.git_output()
-        re_list = [
-            item.replace(".", r"\.").replace("*", ".*")
-            for item in self.test_file_convention
-        ]
-        re_string = r"(\/|^)" + r"|".join(re_list)
-
-        folders, files = [], []
-        for candidate in raw_output.splitlines():
-            file_or_folder = self.parser(candidate)
-            if file_or_folder:
-                if file_or_folder.endswith("/"):
-                    folders.append(file_or_folder)
-                elif re.search(re_string, file_or_folder):
-                    files.append(file_or_folder)
-        return files, folders
-
-    def only_tests(self):
-        raw_output = self.git_output()
-        re_list = [
-            item.replace(".", r"\.").replace("*", ".*")
-            for item in self.test_file_convention
-        ]
+    def only_tests(self, raw_output, re_list):
         test_file_regex = r"(\/|^)" + r"|".join(re_list)
-        test_class_regex = r"(?<=class\s).*Test.*.[\w](?=\(|\:)"
-        test_regex = r"(?<=def\s)test.*(?=\(|/:)"
+        test_regex = ""
+        class_regex = ""
+        for item in self.test_conventions["function"]:
+            test_regex = (
+                test_regex + r"(?<=def\s).*{0}.*.[\w](?=\(|/:)".format(item) + r"|"
+            )
+        else:
+            test_regex = test_regex[:-1]
 
+        for item in self.test_conventions["class"]:
+            class_regex = (
+                class_regex + r"(?<=class\s).*{0}.*.[\w](?=\(|\:)".format(item) + r"|"
+            )
+        else:
+            class_regex = class_regex[:-1]
         tests = []
         last_file_name = None
         file_dict = {}
         class_name = ""
+        was_it_class = False
         for candidate in raw_output.splitlines():
             file_or_test = self.parser(candidate)
             if file_or_test:
@@ -46,15 +37,18 @@ class Mode(ABC):
                     last_file_name = file_or_test
                     if last_file_name not in file_dict.keys():
                         file_dict[last_file_name] = []
-                if re.search(test_class_regex, file_or_test):
-                    match = re.findall(test_class_regex, file_or_test)
+                        was_it_class = False
+                if re.search(class_regex, file_or_test):
+                    match = re.findall(class_regex, file_or_test)
                     class_name = match[0]
                     file_dict[last_file_name].append(class_name)
+                    was_it_class = True
 
                 elif re.search(test_regex, file_or_test):
-                    match = re.findall(test_regex, file_or_test)
-                    test_name = match[0]
-                    file_dict[last_file_name].append(class_name + "::" + test_name)
+                    if not was_it_class:
+                        match = re.findall(test_regex, file_or_test)
+                        test_name = match[0]
+                        file_dict[last_file_name].append(class_name + "::" + test_name)
             class_name = ""
         for file_name in file_dict.keys():
             for test_name in file_dict[file_name]:
@@ -63,6 +57,26 @@ class Mode(ABC):
                 ) if "::" not in test_name else tests.append(file_name + test_name)
 
         return list(dict.fromkeys(tests)), []
+
+    def affected_tests(self):
+        raw_output = self.git_output()
+        re_list = [
+            item.replace(".", r"\.").replace("*", ".*")
+            for item in self.test_conventions["file"]
+        ]
+        re_string = r"(\/|^)" + r"|".join(re_list)
+        folders, files = [], []
+        if self.only_modified_tests:
+            return self.only_tests(raw_output, re_list)
+        else:
+            for candidate in raw_output.splitlines():
+                file_or_folder = self.parser(candidate)
+                if file_or_folder:
+                    if file_or_folder.endswith("/"):
+                        folders.append(file_or_folder)
+                    elif re.search(re_string, file_or_folder):
+                        files.append(file_or_folder)
+        return files, folders
 
     def git_output(self):
         output = subprocess.run(self.command(), stdout=subprocess.PIPE)  # nosec

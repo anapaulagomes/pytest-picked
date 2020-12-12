@@ -87,7 +87,7 @@ Usage
 
   $ pytest --picked --mode=unstaged  # default
 
-  $ pytest --picked --mode=onlychanged
+  $ pytest --picked --mode=onlychanged # runs only updated/modified/added unstaged tests based in git diff 
 
 Features
 --------

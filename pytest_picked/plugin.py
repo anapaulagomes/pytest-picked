@@ -32,11 +32,19 @@ def pytest_addoption(parser):
 def _get_affected_paths(config):
     picked_mode = config.getoption("picked_mode")
     test_file_convention = config._getini("python_files")  # pylint: disable=W0212
-
+    test_class_convention = config._getini("python_classes")  # pylint: disable=W0212
+    test_function_convention = config._getini(
+        "python_functions"
+    )  # pylint: disable=W0212
+    test_conventions = {
+        "file": test_file_convention,
+        "class": test_class_convention,
+        "function": test_function_convention,
+    }
     modes = {
-        "branch": Branch(test_file_convention),
-        "unstaged": Unstaged(test_file_convention),
-        "onlychanged": OnlyChanged(test_file_convention),
+        "branch": Branch(test_conventions),
+        "unstaged": Unstaged(test_conventions),
+        "onlychanged": OnlyChanged(test_conventions, only_modified_tests=True),
     }
     try:
         mode = modes[picked_mode]
@@ -46,10 +54,7 @@ def _get_affected_paths(config):
         config.args = []
         raise ValueError(error)
     else:
-        if picked_mode == "onlychanged":
-            return mode.only_tests()
-        else:
-            return mode.affected_tests()
+        return mode.affected_tests()
 
 
 def pytest_configure(config):

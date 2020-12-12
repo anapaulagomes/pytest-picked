@@ -1,10 +1,12 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Added support to pick the only changed/modified and newly added tests
+
 ### Modified
 - Add fixture for git user configuration
 - Skip "Publish to Test PyPi" workflow when there is no change on setup.py
-- Added support to pick the only changed/modified and newly added tests
 
 ## [0.4.4] - 2020-03-21
 ### Fixed
