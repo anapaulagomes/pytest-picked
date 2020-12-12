@@ -87,7 +87,10 @@ Usage
 
   $ pytest --picked --mode=unstaged  # default
 
-  $ pytest --picked --mode=onlychanged # runs only updated/modified/added unstaged tests based in git diff 
+  $ pytest --picked --mode=branch --parent-branch=main # if your parent branch differs from "master"
+
+  $ pytest --picked --mode=onlychanged # runs only updated/modified/added unstaged tests based in git diff
+
 
 Features
 --------
