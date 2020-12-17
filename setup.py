@@ -14,7 +14,7 @@ def read(fname):
 
 setup(
     name="pytest-picked",
-    version="0.4.5",
+    version="0.4.6",
     author="Ana Paula Gomes",
     author_email="apgomes88@gmail.com",
     maintainer="Ana Paula Gomes",
@@ -27,7 +27,6 @@ setup(
     python_requires=">=3.5",
     install_requires=["pytest>=3.5.0"],
     classifiers=[
-        "Development Status :: 4 - Beta",
         "Framework :: Pytest",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Testing",
