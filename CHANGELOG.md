@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [0.4.6] - 2020-12-17
+### Added
+- Add optional parameter, `--parent-branch`, to point to different parent branch (#113)
+
+### Modified
+- Add fixture for git user configuration
+- Skip "Publish to Test PyPi" workflow when there is no change on setup.py
+
 ## [0.4.4] - 2020-03-21
 ### Fixed
 - Fix branch mode for renaming cases (#77)
@@ -37,7 +45,8 @@
 ### Added
 - Run the tests according with changed files
 
-[Unreleased]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.4...HEAD
+[Unreleased]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.6...HEAD
+[0.4.6]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.4...v0.4.6
 [0.4.4]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.1...v0.4.3
 [0.4.1]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.0...v0.4.1

@@ -49,8 +49,12 @@ class Mode(ABC):
 
 
 class Branch(Mode):
+    def __init__(self, test_file_convention, parent_branch="master"):
+        super().__init__(test_file_convention)
+        self.parent_branch = parent_branch
+
     def command(self):
-        return ["git", "diff", "--name-status", "--relative", "master"]
+        return ["git", "diff", "--name-status", "--relative", self.parent_branch]
 
     def parser(self, candidate):
         """
@@ -65,11 +69,13 @@ class Branch(Mode):
         M       tests/test_modes.py
         R098    tests/test_pytest_picked.py     tests/test_pytest_picked.py
         The first two digits are M, A, D, R, C, U, ? or !
-        R and C include a percentage of how different the diffed file is, represented as 3 integers.
+        R and C include a percentage of how different the diffed file is,
+        represented as 3 integers.
         The rest of the characters up until the 9th character are spaces.
         If the file was deleted it will have a D at the beginning of the line.
-        If the file was renamed, it will have multiple spaces between the filenames and look like this:
-        R100  school/migrations/from-school.csv     school/migrations/new-things-from-school.csv
+        If the file was renamed, it will have multiple spaces between the filenames
+        and look like this:
+        R100  school/from-school.csv     school/new-things-from-school.csv
         The number of spaces are dependent on the length of the filenames.
         Reference:
         https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---name-status
