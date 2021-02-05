@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.4.7] - 2021-2-4
+### Added
+- Respect pytest directory or file cmd-line parameters when running with --picked (#123)
+
 ## [0.4.6] - 2020-12-17
 ### Added
 - Add optional parameter, `--parent-branch`, to point to different parent branch (#113)
