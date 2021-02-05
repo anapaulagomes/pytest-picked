@@ -74,7 +74,6 @@ def test_return_nothing_if_does_not_have_changed_test_files(testdir):
 def test_return_error_if_not_git_repository(testdir):
     o = b"fatal: Not a git repository (or any of the parent directories): .git"
     with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
-
         subprocess_mock.return_value.stdout = o
 
         result = testdir.runpytest("--picked")
@@ -117,8 +116,8 @@ def test_filter_file_when_is_either_modified_and_not_staged(testdir):
 def test_handle_with_white_spaces(testdir):
     with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
         output = (
-            b" M school/tests/test_flows.py\n"
-            + b"A  school/tests/test_serializers.py\n M sales/tasks.py"
+                b" M school/tests/test_flows.py\n"
+                + b"A  school/tests/test_serializers.py\n M sales/tasks.py"
         )
         subprocess_mock.return_value.stdout = output
 
@@ -269,6 +268,33 @@ def test_should_accept_different_parent_branch_param(testdir, tmpdir):
             [
                 "Changed test files... 2. "
                 + "['test_flows.py', 'test_serializers.py']",
+                "Changed test folders... 0. []",
+            ]
+        )
+
+
+def test_should_run_git_command_against_directory(testdir, tmpdir):
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        output = b"M       tests/api/test_flows.py\nA       tests/api/test_serializers.py\n"
+        subprocess_mock.return_value.stdout = output
+
+        result = testdir.runpytest("tests/api", "--picked", "--mode=branch")
+        testdir.makepyfile(
+            ".py",
+            test_flows="""
+            def test_sth():
+                assert True
+            """,
+            test_serializers="""
+            def test_sth():
+                assert True
+            """,
+        )
+        tmpdir.mkdir("tests")
+        result.stdout.fnmatch_lines(
+            [
+                "Changed test files... 2. "
+                + "['tests/api/test_flows.py', 'tests/api/test_serializers.py']",
                 "Changed test folders... 0. []",
             ]
         )

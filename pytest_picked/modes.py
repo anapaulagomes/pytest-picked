@@ -4,8 +4,9 @@ from abc import ABC, abstractmethod
 
 
 class Mode(ABC):
-    def __init__(self, test_file_convention):
+    def __init__(self, test_file_convention, test_files_or_dirs):
         self.test_file_convention = test_file_convention
+        self.test_files_or_dirs = test_files_or_dirs
 
     def affected_tests(self):
         raw_output = self.git_output()
@@ -49,12 +50,16 @@ class Mode(ABC):
 
 
 class Branch(Mode):
-    def __init__(self, test_file_convention, parent_branch="master"):
-        super().__init__(test_file_convention)
+    def __init__(self, test_file_convention, test_files_or_dirs=None, parent_branch="master"):
+        super().__init__(test_file_convention, test_files_or_dirs)
         self.parent_branch = parent_branch
 
     def command(self):
-        return ["git", "diff", "--name-status", "--relative", self.parent_branch]
+        if self.test_files_or_dirs:
+            return ["git", "diff", "--name-status", "--relative", self.parent_branch, "--",
+                    *self.test_files_or_dirs]
+        else:
+            return ["git", "diff", "--name-status", "--relative", self.parent_branch]
 
     def parser(self, candidate):
         """
@@ -96,8 +101,14 @@ class Branch(Mode):
 
 
 class Unstaged(Mode):
+    def __init__(self, test_file_convention, test_files_or_dirs=None):
+        super().__init__(test_file_convention, test_files_or_dirs)
+
     def command(self):
-        return ["git", "status", "--short"]
+        if self.test_files_or_dirs:
+            return ["git", "status", "--short", "--", self.test_files_or_dirs]
+        else:
+            return ["git", "status", "--short"]
 
     def parser(self, candidate):
         """
