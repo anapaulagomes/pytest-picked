@@ -116,8 +116,8 @@ def test_filter_file_when_is_either_modified_and_not_staged(testdir):
 def test_handle_with_white_spaces(testdir):
     with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
         output = (
-                b" M school/tests/test_flows.py\n"
-                + b"A  school/tests/test_serializers.py\n M sales/tasks.py"
+            b" M school/tests/test_flows.py\n"
+            + b"A  school/tests/test_serializers.py\n M sales/tasks.py"
         )
         subprocess_mock.return_value.stdout = output
 
@@ -275,7 +275,9 @@ def test_should_accept_different_parent_branch_param(testdir, tmpdir):
 
 def test_should_run_git_command_against_directory(testdir, tmpdir):
     with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
-        output = b"M       tests/api/test_flows.py\nA       tests/api/test_serializers.py\n"
+        output = (
+            b"M       tests/api/test_flows.py\nA       tests/api/test_serializers.py\n"
+        )
         subprocess_mock.return_value.stdout = output
 
         result = testdir.runpytest("tests/api", "--picked", "--mode=branch")

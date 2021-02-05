@@ -50,14 +50,23 @@ class Mode(ABC):
 
 
 class Branch(Mode):
-    def __init__(self, test_file_convention, test_files_or_dirs=None, parent_branch="master"):
+    def __init__(
+        self, test_file_convention, test_files_or_dirs=None, parent_branch="master"
+    ):
         super().__init__(test_file_convention, test_files_or_dirs)
         self.parent_branch = parent_branch
 
     def command(self):
         if self.test_files_or_dirs:
-            return ["git", "diff", "--name-status", "--relative", self.parent_branch, "--",
-                    *self.test_files_or_dirs]
+            return [
+                "git",
+                "diff",
+                "--name-status",
+                "--relative",
+                self.parent_branch,
+                "--",
+                *self.test_files_or_dirs,
+            ]
         else:
             return ["git", "diff", "--name-status", "--relative", self.parent_branch]
 

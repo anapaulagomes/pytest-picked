@@ -45,7 +45,7 @@ def _get_affected_paths(config):
     test_files_or_dirs = config.getoption("file_or_dir")
     # Remove root_dir from test_files_or_dirs if it exists
     if root_dir in test_files_or_dirs:
-        test_files_or_dirs.remove(root_dir + '/')
+        test_files_or_dirs.remove(root_dir + "/")
 
     modes = {
         "branch": Branch(test_file_convention, test_files_or_dirs, parent_branch),

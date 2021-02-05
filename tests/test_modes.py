@@ -38,8 +38,8 @@ class TestUnstaged:
             ("D  tests/migrations/auto.py", None),
             ("R  tests/from-school.csv -> test_new_things.py", "test_new_things.py"),
             (
-                    "R  tests/from-school.csv -> tests/test_new_things.py",
-                    "tests/test_new_things.py",
+                "R  tests/from-school.csv -> tests/test_new_things.py",
+                "tests/test_new_things.py",
             ),
             (" M test.py", "test.py"),
             ("AD test.py", None),
@@ -55,19 +55,19 @@ class TestUnstaged:
     def test_should_list_unstaged_changed_files_as_affected_tests(self):
         test_file_convention = ["test_*.py", "*_test.py"]
         raw_output = (
-                b"R  school/migrations/from-school.csv -> test_new_things.py\n"
-                + b"D  school/migrations/0032_auto_20180515_1308.py\n"
-                + b"?? Pipfile\n"
-                + b"!! school/tests/test_rescue_students.py\n"
-                + b"C  tests/\n"
-                + b" M .pre-commit-config.yaml\n"
-                + b" M picked.py\n"
-                + b"A  setup.py\n"
-                + b" U tests/test_pytest_picked.py\n"
-                + b"?? random/tests/\n"
-                + b" M intestine.py\n"
-                + b"?? api/\n"
-                + b" M tests_new/intestine.py\n"
+            b"R  school/migrations/from-school.csv -> test_new_things.py\n"
+            + b"D  school/migrations/0032_auto_20180515_1308.py\n"
+            + b"?? Pipfile\n"
+            + b"!! school/tests/test_rescue_students.py\n"
+            + b"C  tests/\n"
+            + b" M .pre-commit-config.yaml\n"
+            + b" M picked.py\n"
+            + b"A  setup.py\n"
+            + b" U tests/test_pytest_picked.py\n"
+            + b"?? random/tests/\n"
+            + b" M intestine.py\n"
+            + b"?? api/\n"
+            + b" M tests_new/intestine.py\n"
         )
 
         with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
@@ -101,7 +101,7 @@ class TestBranch:
         ]
 
     def test_should_return_command_that_list_all_changed_files_for_different_branch(
-            self,
+        self,
     ):
         mode = Branch([], [], "main")
         command = mode.command()
@@ -114,9 +114,9 @@ class TestBranch:
         [
             ("D       tests/migrations/auto.py", None),
             (
-                    "R098    tests/test_pytest_picked.py     "
-                    "tests/test_pytest_picked.py",
-                    "tests/test_pytest_picked.py",
+                "R098    tests/test_pytest_picked.py     "
+                "tests/test_pytest_picked.py",
+                "tests/test_pytest_picked.py",
             ),
             ("M       test.py", "test.py"),
             ("AD      test.py", None),
@@ -191,8 +191,9 @@ class TestBranch:
         pytestroot.join("test_pytestroot").new(ext="py").write(b"", "wb")
         assert testdir.run("git", "add", ".").ret == 0
 
-        output = set(Branch([], ["pytestroot/test_pytestroot.py"]).git_output().splitlines())
+        output = set(
+            Branch([], ["pytestroot/test_pytestroot.py"]).git_output().splitlines()
+        )
         assert output == {
             "A       pytestroot/test_pytestroot.py",
         }
-
