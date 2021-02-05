@@ -2,15 +2,15 @@
 pytest-picked
 ===============
 
-.. image:: https://travis-ci.org/anapaulagomes/pytest-picked.svg?branch=master
-    :target: https://travis-ci.org/anapaulagomes/pytest-picked
-    :alt: See Build Status on Travis CI
+.. image:: https://github.com/anapaulagomes/pytest-picked/workflows/Tests/badge.svg
+    :target: https://github.com/anapaulagomes/pytest-picked/actions?query=workflow%3ATests
+    :alt: See Test Status on Github Actions
 
-.. image:: https://ci.appveyor.com/api/projects/status/github/anapaulagomes/pytest-picked?branch=master&svg=true
-    :target: https://ci.appveyor.com/project/anapaulagomes/pytest-picked/branch/master
-    :alt: See Build Status on AppVeyor
+.. image:: https://github.com/anapaulagomes/pytest-picked/workflows/Publish%20to%20Test%20PyPi/badge.svg
+    :target: https://test.pypi.org/project/pytest-picked/
+    :alt: See Package Status on Test PyPI
 
-.. image:: https://img.shields.io/pypi/v/pytest-picked.svg
+.. image:: https://github.com/anapaulagomes/pytest-picked/workflows/Publish%20to%20PyPI/badge.svg
     :target: https://pypi.org/project/pytest-picked/
     :alt: See Package Status on PyPI
 
@@ -87,6 +87,8 @@ Usage
 
   $ pytest --picked --mode=unstaged  # default
 
+  $ pytest --picked --mode=branch --parent-branch=main # if your parent branch differs from "master"
+
 
 Features
 --------
@@ -131,5 +133,5 @@ If you encounter any problems, please `file an issue`_ along with a detailed des
 .. _`file an issue`: https://github.com/anapaulagomes/pytest-picked/issues
 .. _`pytest`: https://github.com/pytest-dev/pytest
 .. _`tox`: https://tox.readthedocs.io/en/latest/
-.. _`pip`: https://pypi.org/project/pip/
-.. _`PyPI`: https://pypi.org/project
+.. _`pip`: https://pypi.org/project/pytest-picked/
+.. _`PyPI`: https://pypi.org/project/pytest-picked/
