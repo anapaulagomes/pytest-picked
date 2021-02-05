@@ -115,7 +115,7 @@ class Unstaged(Mode):
 
     def command(self):
         if self.test_files_or_dirs:
-            return ["git", "status", "--short", "--", self.test_files_or_dirs]
+            return ["git", "status", "--short", "--", *self.test_files_or_dirs]
         else:
             return ["git", "status", "--short"]
 

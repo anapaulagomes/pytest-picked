@@ -41,11 +41,11 @@ def _get_affected_paths(config):
     picked_mode = config.getoption("picked_mode")
     parent_branch = config.getoption("parent_branch")
     test_file_convention = config._getini("python_files")  # pylint: disable=W0212
-    root_dir = str(config.rootdir)
+    root_dir = str(config.rootdir) + "/"
     test_files_or_dirs = config.getoption("file_or_dir")
     # Remove root_dir from test_files_or_dirs if it exists
     if root_dir in test_files_or_dirs:
-        test_files_or_dirs.remove(root_dir + "/")
+        test_files_or_dirs.remove(root_dir)
 
     modes = {
         "branch": Branch(test_file_convention, test_files_or_dirs, parent_branch),
