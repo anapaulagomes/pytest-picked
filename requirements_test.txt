@@ -2,5 +2,5 @@
 black==21.4b2
 flake8==3.9.1
 isort==5.8.0
-pre-commit==2.12.1
+pre-commit==3.2.1
 tox==3.23.0
