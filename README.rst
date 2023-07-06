@@ -1,3 +1,10 @@
+⚠️ Looking for maintainers
+-----
+
+This project is not being actively maintained. Do you want to contribute to it and be a maintainer? Open an issue!
+
+-----
+
 ===============
 pytest-picked
 ===============
