@@ -1,6 +1,6 @@
 name: Tests
 
-on: [ push, pull_request ]
+on: [ push ]
 
 jobs:
   lint:
@@ -16,6 +16,7 @@ jobs:
           black --check .
           flake8 .
           isort **/*.py -c
+
   linux_tests:
     name: Linux - Python ${{ matrix.python-version }}
     needs: lint
@@ -32,10 +33,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
-          python -m pip install --upgrade tox tox-gh-actions
           python -m pip install -r requirements_test.txt
-      - name: Run tox targets for ${{ matrix.python-version }}
-        run: python -m tox
+      - name: Run tests for ${{ matrix.python-version }}
+        run: pytest -vvv
+
   windows_tests:
     name: Windows - Python ${{ matrix.python-version }}
     needs: linux_tests
@@ -52,7 +53,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
-          python -m pip install --upgrade tox tox-gh-actions
           python -m pip install -r requirements_test.txt
-      - name: Run tox targets for ${{ matrix.python-version }}
-        run: python -m tox
+      - name: Run tests for ${{ matrix.python-version }}
+        run: pytest -vvv
