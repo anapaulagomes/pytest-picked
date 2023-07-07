@@ -29,7 +29,7 @@ def test_picked_type_options(testdir, picked_type):
         subprocess_mock.return_value.stdout = b""
 
         result = testdir.runpytest(
-            "--picked={}".format(picked_type) if picked_type else "--picked"
+            f"--picked={picked_type}" if picked_type else "--picked"
         )
 
         result.stdout.fnmatch_lines(["Changed test files... 0. []"])
