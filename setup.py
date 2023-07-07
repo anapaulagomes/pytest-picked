@@ -22,7 +22,7 @@ setup(
     license="MIT",
     url="https://github.com/anapaulagomes/pytest-picked",
     description="Run the tests related to the changed files",
-    long_description=read("README.rst"),
+    long_description=read("README.md"),
     packages=find_packages(exclude=["tests", "docs"]),
     python_requires=">=3.5",
     install_requires=["pytest>=3.5.0"],
