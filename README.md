@@ -1,10 +1,3 @@
-⚠️ Looking for maintainers \-\-\-\--
-
-This project is not being actively maintained. Do you want to contribute
-to it and be a maintainer? Open an issue!
-
-------------------------------------------------------------------------
-
 # pytest-picked
 
 [![See Test Status on Github Actions](https://github.com/anapaulagomes/pytest-picked/workflows/Tests/badge.svg)](https://github.com/anapaulagomes/pytest-picked/actions?query=workflow%3ATests)
