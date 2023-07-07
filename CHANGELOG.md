@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Drop support to Python 3.5 and 3.6, and add support to 3.9, 3.10, and 3.11
 
 ## [0.4.6] - 2020-12-17
 ### Added
