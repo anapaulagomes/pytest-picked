@@ -1,24 +1,21 @@
 repos:
--   repo: https://github.com/ambv/black
-    rev: master
-    hooks:
-    -   id: black
-        args: [--check, .]
-        entry: black
-        language: python
-        language_version: python3
-        require_serial: true
-        types: [python]
--   repo: git@github.com:pre-commit/pre-commit-hooks
-    rev: v1.2.3
-    hooks:
-    -   id: trailing-whitespace
-    -   id: debug-statements
--   repo: local
-    hooks:
-    -   id: isort
-        name: isort
-        entry: isort
-        language: system
-        types:
-        - python
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.4.0
+  hooks:
+  - id: check-added-large-files
+  - id: debug-statements
+  - id: end-of-file-fixer
+  - id: requirements-txt-fixer
+  - id: trailing-whitespace
+- repo: https://github.com/pycqa/flake8
+  rev: 6.0.0
+  hooks:
+  - id: flake8
+- repo: https://github.com/pre-commit/mirrors-isort
+  rev: v5.10.1
+  hooks:
+  - id: isort
+- repo: https://github.com/ambv/black
+  rev: 23.3.0
+  hooks:
+  - id: black

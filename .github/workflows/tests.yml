@@ -12,10 +12,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements_test.txt
       - name: Lint
-        run: |
-          black --check .
-          flake8 .
-          isort **/*.py -c
+        run: pre-commit run --all-files
 
   tests:
     name: ${{ matrix.os }} - python ${{ matrix.python-version }}
