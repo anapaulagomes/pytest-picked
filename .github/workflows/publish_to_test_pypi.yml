@@ -1,6 +1,7 @@
 name: Publish to Test PyPi
 
 on:
+  workflow_dispatch:
   push:
     branches: [dev]
     paths:
