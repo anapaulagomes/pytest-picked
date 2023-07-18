@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import codecs
 import os
 
@@ -24,16 +21,18 @@ setup(
     description="Run the tests related to the changed files",
     long_description=read("README.rst"),
     packages=find_packages(exclude=["tests", "docs"]),
-    python_requires=">=3.5",
-    install_requires=["pytest>=3.5.0"],
+    python_requires=">=3.7",
+    install_requires=["pytest>=3.7.0"],
     classifiers=[
         "Framework :: Pytest",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Testing",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "License :: OSI Approved :: MIT License",
     ],
     entry_points={"pytest11": ["picked = pytest_picked.plugin"]},

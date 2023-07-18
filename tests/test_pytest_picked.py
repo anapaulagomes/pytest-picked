@@ -74,7 +74,6 @@ def test_return_nothing_if_does_not_have_changed_test_files(testdir):
 def test_return_error_if_not_git_repository(testdir):
     o = b"fatal: Not a git repository (or any of the parent directories): .git"
     with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
-
         subprocess_mock.return_value.stdout = o
 
         result = testdir.runpytest("--picked")
