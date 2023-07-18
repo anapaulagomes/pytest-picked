@@ -11,7 +11,7 @@ def read(fname):
 
 setup(
     name="pytest-picked",
-    version="0.4.6",
+    version="0.4.7",
     author="Ana Paula Gomes",
     author_email="apgomes88@gmail.com",
     maintainer="Ana Paula Gomes",
@@ -20,6 +20,7 @@ setup(
     url="https://github.com/anapaulagomes/pytest-picked",
     description="Run the tests related to the changed files",
     long_description=read("README.md"),
+    long_description_content_type="text/markdown",
     packages=find_packages(exclude=["tests", "docs"]),
     python_requires=">=3.7",
     install_requires=["pytest>=3.7.0"],
