@@ -20,6 +20,9 @@ def git_repository(testdir):
         assert testdir.run(*git_user).ret == 0
         assert testdir.run(*git_email).ret == 0
 
+    testdir.run(
+        "git", "checkout", "-b", "master"
+    ).ret  # TODO remove when making main the default branch
     assert testdir.run("git", "commit", "--allow-empty", "-m_").ret == 0
     yield gitroot
 
