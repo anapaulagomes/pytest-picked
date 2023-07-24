@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Make `main` the default parent branch (#148)
 - Drop support to Python 3.5 and 3.6, and add support to 3.9, 3.10, and 3.11
 
 ## [0.4.6] - 2020-12-17

@@ -251,7 +251,7 @@ def test_should_accept_different_parent_branch_param(testdir, tmpdir):
         output = b"M       test_flows.py\nA       test_serializers.py\n"
         subprocess_mock.return_value.stdout = output
 
-        result = testdir.runpytest("--picked", "--mode=branch", "--parent-branch=main")
+        result = testdir.runpytest("--picked", "--mode=branch", "--parent-branch=dev")
         testdir.makepyfile(
             ".py",
             test_flows="""
