@@ -19,8 +19,8 @@ Let's say you have the following output from `git status`:
 
     $ git status
 
-    On branch master
-    Your branch is ahead of 'origin/master' by 1 commit.
+    On branch main
+    Your branch is ahead of 'origin/main' by 1 commit.
       (use "git push" to publish your local commits)
 
     Untracked files:
@@ -65,7 +65,7 @@ pytest --picked --mode=branch
 
 pytest --picked --mode=unstaged  # default
 
-pytest --picked --mode=branch --parent-branch=main # if your parent branch differs from "master"
+pytest --picked --mode=branch --parent-branch=dev # if your parent branch differs from "main"
 ```
 
 ## Features
