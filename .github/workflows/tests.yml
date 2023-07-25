@@ -35,5 +35,8 @@ jobs:
           python setup.py install
       - name: Run tests for ${{ matrix.python-version }}
         run: |
+          echo "$(git branch)"
+          git fetch origin main
+          echo "$(git branch)"
           git branch -m main  # still master by default in GitHub Actions
           pytest -vvv
