@@ -20,9 +20,7 @@ def git_repository(testdir):
         assert testdir.run(*git_user).ret == 0
         assert testdir.run(*git_email).ret == 0
 
-    testdir.run(
-        "git", "checkout", "-b", "master"
-    ).ret  # TODO remove when making main the default branch
+    assert testdir.run("git", "checkout", "-b", "main").ret == 0
     assert testdir.run("git", "commit", "--allow-empty", "-m_").ret == 0
     yield gitroot
 
@@ -100,7 +98,7 @@ class TestBranch:
             "diff",
             "--name-status",
             "--relative",
-            "master",
+            "main",
         ]
 
     def test_should_return_command_that_list_all_changed_files_for_different_branch(

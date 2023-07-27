@@ -34,4 +34,6 @@ jobs:
           python -m pip install -r requirements.txt
           python setup.py install
       - name: Run tests for ${{ matrix.python-version }}
-        run: pytest -vvv
+        run: |
+          git branch -m main  # still master by default in GitHub Actions
+          pytest -vvv

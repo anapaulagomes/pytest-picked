@@ -31,9 +31,9 @@ def pytest_addoption(parser):
         "--parent-branch",
         action="store",
         dest="parent_branch",
-        default="master",
+        default="main",
         required=False,
-        help="The main branch of your repo (master, main, trunk, etc)",
+        help="The main branch of your repo (main, develop, trunk etc)",
     )
 
 

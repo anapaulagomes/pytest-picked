@@ -1,5 +1,6 @@
 import re
 import subprocess  # nosec
+import warnings
 from abc import ABC, abstractmethod
 
 
@@ -49,8 +50,9 @@ class Mode(ABC):
 
 
 class Branch(Mode):
-    def __init__(self, test_file_convention, parent_branch="master"):
+    def __init__(self, test_file_convention, parent_branch="main"):
         super().__init__(test_file_convention)
+        warnings.warn("Now `main` is the default parent branch")
         self.parent_branch = parent_branch
 
     def command(self):
