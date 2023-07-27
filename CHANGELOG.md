@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.5.0] - 2023-07-27
 ### Added
 - Make `main` the default parent branch (#148)
 - Drop support to Python 3.5 and 3.6, and add support to 3.9, 3.10, and 3.11
@@ -49,6 +49,7 @@
 - Run the tests according with changed files
 
 [Unreleased]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.6...HEAD
+[0.5.0]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.6...v0.5.0
 [0.4.6]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.4...v0.4.6
 [0.4.4]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.1...v0.4.3
