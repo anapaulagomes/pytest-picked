@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 
 
 class Mode(ABC):
-    def __init__(self, test_file_convention):
+    def __init__(self, test_file_convention, **kwargs):
         self.test_file_convention = test_file_convention
 
     def affected_tests(self):
@@ -50,8 +50,8 @@ class Mode(ABC):
 
 
 class Branch(Mode):
-    def __init__(self, test_file_convention, parent_branch="main"):
-        super().__init__(test_file_convention)
+    def __init__(self, test_file_convention, parent_branch="main", **kwargs):
+        super().__init__(test_file_convention, **kwargs)
         warnings.warn("Now `main` is the default parent branch")
         self.parent_branch = parent_branch
 

@@ -39,22 +39,21 @@ def pytest_addoption(parser):
 
 def _get_affected_paths(config):
     picked_mode = config.getoption("picked_mode")
-    parent_branch = config.getoption("parent_branch")
     test_file_convention = config._getini("python_files")  # pylint: disable=W0212
 
     modes = {
-        "branch": Branch(test_file_convention, parent_branch),
-        "unstaged": Unstaged(test_file_convention),
+        "branch": Branch,
+        "unstaged": Unstaged,
     }
     try:
         mode = modes[picked_mode]
+        options = config.option.__dict__
     except KeyError:
         error = "Invalid mode. Options: `{}`.".format(", ".join(modes.keys()))
         _write(config, [error])
         config.args = []
         raise ValueError(error)
-    else:
-        return mode.affected_tests()
+    return mode(test_file_convention, **options).affected_tests()
 
 
 def pytest_configure(config):

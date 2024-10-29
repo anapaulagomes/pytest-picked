@@ -1,8 +1,9 @@
 # Changelog
 
-## [Unrealeased]
+## [Unreleased]
 ### Added
 - Add support to Python 3.12 and 3.13dev
+- Prevent branch mode warnings in unstaged mode (#183)
 
 ## [0.5.0] - 2023-07-27
 ### Added
