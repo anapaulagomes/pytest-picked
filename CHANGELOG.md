@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unrealeased]
+### Added
+- Add support to Python 3.12 and 3.13dev
+
 ## [0.5.0] - 2023-07-27
 ### Added
 - Make `main` the default parent branch (#148)
