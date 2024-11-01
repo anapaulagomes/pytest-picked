@@ -33,6 +33,10 @@ class TestUnstaged:
         assert isinstance(command, list)
         assert mode.command() == ["git", "status", "--short"]
 
+    def test_should_not_warn_about_main_branch(self, recwarn):
+        Unstaged([])
+        assert len(recwarn) == 0
+
     @pytest.mark.parametrize(
         "line,expected_line",
         [
@@ -100,6 +104,11 @@ class TestBranch:
             "--relative",
             "main",
         ]
+
+    def test_should_warn_about_main_branch(self, recwarn):
+        Branch([])
+        assert len(recwarn) == 1
+        assert str(recwarn[0].message) == "Now `main` is the default parent branch"
 
     def test_should_return_command_that_list_all_changed_files_for_different_branch(
         self,
