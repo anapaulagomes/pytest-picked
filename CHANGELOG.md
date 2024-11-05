@@ -58,6 +58,7 @@
 - Run the tests according with changed files
 
 [Unreleased]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.6...HEAD
+[0.5.1]: https://github.com/anapaulagomes/pytest-picked/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.6...v0.5.0
 [0.4.6]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.4...v0.4.6
 [0.4.4]: https://github.com/anapaulagomes/pytest-picked/compare/v0.4.3...v0.4.4
