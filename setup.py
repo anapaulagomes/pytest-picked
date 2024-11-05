@@ -11,7 +11,7 @@ def read(fname):
 
 setup(
     name="pytest-picked",
-    version="0.5.0",
+    version="0.5.1",
     author="Ana Paula Gomes",
     author_email="apgomes88@gmail.com",
     maintainer="Ana Paula Gomes",
