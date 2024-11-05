@@ -157,7 +157,7 @@ def test_should_match_with_the_begin_of_path(testdir, tmpdir, tmpdir_factory):
         )
 
 
-def test_should_accept_branch_as_mode(testdir, tmpdir):
+def test_should_accept_branch_as_mode(testdir, tmpdir, recwarn):
     with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
         output = b"M       test_flows.py\nA       test_serializers.py\n"
         subprocess_mock.return_value.stdout = output
@@ -182,6 +182,36 @@ def test_should_accept_branch_as_mode(testdir, tmpdir):
                 "Changed test folders... 0. []",
             ]
         )
+        assert len(recwarn) == 1
+        assert str(recwarn[0].message) == "Now `main` is the default parent branch"
+
+
+def test_should_accept_unstaged_as_mode(testdir, tmpdir, recwarn):
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        output = b" M test_flows.py\nA  test_serializers.py\n"
+        subprocess_mock.return_value.stdout = output
+
+        result = testdir.runpytest("--picked", "--mode=unstaged")
+        testdir.makepyfile(
+            ".py",
+            test_flows="""
+            def test_sth():
+                assert True
+            """,
+            test_serializers="""
+            def test_sth():
+                assert True
+            """,
+        )
+        tmpdir.mkdir("tests")
+        result.stdout.fnmatch_lines(
+            [
+                "Changed test files... 2. "
+                + "['test_flows.py', 'test_serializers.py']",
+                "Changed test folders... 0. []",
+            ]
+        )
+        assert len(recwarn) == 0
 
 
 def test_should_not_run_the_tests_if_mode_is_invalid(testdir, tmpdir):
