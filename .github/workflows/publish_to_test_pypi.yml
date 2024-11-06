@@ -22,5 +22,5 @@ jobs:
         TWINE_USERNAME: ${{ secrets.pypi_username }}
         TWINE_PASSWORD: ${{ secrets.test_pypi_password }}
       run: |
-        python -m build
+        python -m build twine
         twine upload --skip-existing --repository testpypi dist/*
