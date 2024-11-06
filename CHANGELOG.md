@@ -1,8 +1,6 @@
 # Changelog
 
 ## [Unreleased]
-### Modified
-- Replace setup.py by pyproject.toml
 
 ## [0.5.1] - 2024-11-05
 ### Added
@@ -10,6 +8,7 @@
 
 ### Modified
 - Prevent branch mode warnings in unstaged mode (#183)
+- Replace setup.py by pyproject.toml
 
 ## [0.5.0] - 2023-07-27
 ### Added
