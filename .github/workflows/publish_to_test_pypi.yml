@@ -19,7 +19,7 @@ jobs:
         pip install build twine
     - name: Build and publish
       env:
-        TWINE_USERNAME: ${{ secrets.pypi_username }}
+        TWINE_USERNAME: ${{ secrets.test_pypi_username }}
         TWINE_PASSWORD: ${{ secrets.test_pypi_password }}
       run: |
         python -m build
