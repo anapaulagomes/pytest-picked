@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Modified
+- Replace setup.py by pyproject.toml
 
 ## [0.5.1] - 2024-11-05
 ### Added

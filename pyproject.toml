@@ -1,0 +1,31 @@
+[project]
+name = "pytest-picked"
+version = "0.5.1"
+description = "Run the tests related to the changed files"
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { text = "MIT" }
+authors = [{ name = "Ana Paula Gomes", email = "apgomes88@gmail.com" }]
+keywords = ["pytest", "testing", "changed files", "selective tests"]
+requires-python = ">=3.8"
+classifiers = [
+    "Framework :: Pytest",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Testing",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License"
+]
+dependencies = ["pytest>=3.7.0"]
+
+[project.entry-points."pytest11"]
+picked = "pytest_picked.plugin"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages]
+find = { exclude = ["tests", "docs"] }
