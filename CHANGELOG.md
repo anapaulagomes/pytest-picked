@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Modified
+- No longer warns when using branch mode
 
 ## [0.5.1] - 2024-11-05
 ### Added
