@@ -162,7 +162,6 @@ def test_should_accept_branch_as_mode(testdir, tmpdir, recwarn):
         output = b"M       test_flows.py\nA       test_serializers.py\n"
         subprocess_mock.return_value.stdout = output
 
-
         testdir.makepyfile(
             ".py",
             test_flows="""

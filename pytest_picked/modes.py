@@ -1,6 +1,5 @@
 import re
 import subprocess  # nosec
-import warnings
 from abc import ABC, abstractmethod
 
 
