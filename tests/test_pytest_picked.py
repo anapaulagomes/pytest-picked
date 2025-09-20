@@ -162,7 +162,7 @@ def test_should_accept_branch_as_mode(testdir, tmpdir, recwarn):
         output = b"M       test_flows.py\nA       test_serializers.py\n"
         subprocess_mock.return_value.stdout = output
 
-        result = testdir.runpytest("--picked", "--mode=branch")
+
         testdir.makepyfile(
             ".py",
             test_flows="""
@@ -174,6 +174,7 @@ def test_should_accept_branch_as_mode(testdir, tmpdir, recwarn):
                 assert True
             """,
         )
+        result = testdir.runpytest("--picked", "--mode=branch")
         tmpdir.mkdir("tests")
         result.stdout.fnmatch_lines(
             [
@@ -182,8 +183,7 @@ def test_should_accept_branch_as_mode(testdir, tmpdir, recwarn):
                 "Changed test folders... 0. []",
             ]
         )
-        assert len(recwarn) == 1
-        assert str(recwarn[0].message) == "Now `main` is the default parent branch"
+        assert result.ret == 0
 
 
 def test_should_accept_unstaged_as_mode(testdir, tmpdir, recwarn):

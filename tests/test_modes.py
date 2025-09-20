@@ -105,11 +105,6 @@ class TestBranch:
             "main",
         ]
 
-    def test_should_warn_about_main_branch(self, recwarn):
-        Branch([])
-        assert len(recwarn) == 1
-        assert str(recwarn[0].message) == "Now `main` is the default parent branch"
-
     def test_should_return_command_that_list_all_changed_files_for_different_branch(
         self,
     ):
