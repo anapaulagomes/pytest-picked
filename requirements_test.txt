@@ -1,4 +1,4 @@
 -r requirements.txt
 build==1.2.2.post1
-pre-commit==4.0.1
+pre-commit==4.3.0
 tox==4.30.2
