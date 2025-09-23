@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Modified
 - No longer warns when using branch mode
+- Drop support to Python 3.8 and 3.9; add support to 3.13 and 3.14-rc
 
 ## [0.5.1] - 2024-11-05
 ### Added
