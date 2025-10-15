@@ -75,6 +75,14 @@ Using `git status`, this plugin allows you to:
 - Run only tests from modified test files
 - Run tests from modified test files first, followed by all unmodified tests
 
+### Exit Codes
+
+The plugin respects pytest's standard [exit codes](https://docs.pytest.org/en/latest/reference/exit-codes.html):
+
+- **Exit code 5 (NO_TESTS_COLLECTED)**: When using `--picked` and no changed files are detected, no tests will be collected and pytest exits with code 5
+- **Exit code 0 (OK)**: When all tests pass (or when using `--picked=first` with no changes, all tests still run)
+- **Exit code 1 (TESTS_FAILED)**: When one or more tests fail
+
 ## Installation
 
 You can install `pytest-picked` via [PyPI](https://pypi.org/project/pytest-picked/):
