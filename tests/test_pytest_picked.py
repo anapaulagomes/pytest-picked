@@ -300,3 +300,55 @@ def test_should_accept_different_parent_branch_param(testdir, tmpdir):
                 "Changed test folders... 0. []",
             ]
         )
+
+
+def test_exit_code_5_when_no_tests_collected_with_picked(testdir):
+    """Verify exit code 5 (NO_TESTS_COLLECTED) when no changed files with --picked"""
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        subprocess_mock.return_value.stdout = b""
+
+        testdir.makepyfile(
+            test_example="""
+            def test_sth():
+                assert True
+            """
+        )
+        result = testdir.runpytest("--picked")
+
+        result.stdout.fnmatch_lines(["Changed test files... 0. []"])
+        assert result.ret == pytest.ExitCode.NO_TESTS_COLLECTED
+
+
+def test_exit_code_0_when_no_changed_files_with_picked_first(testdir):
+    """Verify exit code 0 when no changed files with --picked=first (all tests run)"""
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        subprocess_mock.return_value.stdout = b""
+
+        testdir.makepyfile(
+            test_example="""
+            def test_sth():
+                assert True
+            """
+        )
+        result = testdir.runpytest("--picked=first", "-v")
+
+        result.stdout.re_match_lines(["test_example.py.+"])
+        assert result.ret == pytest.ExitCode.OK
+
+
+def test_exit_code_1_when_tests_fail_with_picked(testdir):
+    """Verify exit code 1 (TESTS_FAILED) when changed tests fail"""
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        output = b" M test_example.py\n"
+        subprocess_mock.return_value.stdout = output
+
+        testdir.makepyfile(
+            test_example="""
+            def test_sth():
+                assert False
+            """
+        )
+        result = testdir.runpytest("--picked")
+
+        result.stdout.fnmatch_lines(["Changed test files... 1. *"])
+        assert result.ret == pytest.ExitCode.TESTS_FAILED
