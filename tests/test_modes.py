@@ -90,6 +90,33 @@ class TestUnstaged:
         assert files == expected_files
         assert folders == expected_folders
 
+    def test_should_exclude_non_python_files(self):
+        """Test that non-Python files are excluded from affected tests."""
+        test_file_convention = ["test_*.py", "*_test.py"]
+        raw_output = (
+            b"?? test_example.py\n"
+            + b"?? test_config.yml\n"
+            + b"?? test_data.json\n"
+            + b"?? test_data.csv\n"
+            + b"?? config.yaml\n"
+            + b"?? Pipfile\n"
+            + b"?? utils.py\n"
+            + b"?? README.md\n"
+            + b"?? test_init.sh\n"
+        )
+
+        with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+            subprocess_mock.return_value.stdout = raw_output
+            mode = Unstaged(test_file_convention)
+            files, folders = mode.affected_tests()
+
+        # Only Python test files should be included
+        expected_files = ["test_example.py"]
+        expected_folders = []
+
+        assert files == expected_files
+        assert folders == expected_folders
+
 
 class TestBranch:
     def test_should_return_command_that_list_all_changed_files(self):
@@ -151,6 +178,30 @@ class TestBranch:
             "tests/test_new_pytest_picked.py",
             "tests/test_other_module.py",
         ]
+        expected_folders = []
+
+        assert files == expected_files
+        assert folders == expected_folders
+
+    def test_should_exclude_non_python_files_in_branch_mode(self):
+        """Test that non-Python files are excluded from affected tests in branch mode."""
+        raw_output = (
+            b"M       test_example.py\n"
+            b"M       test_config.yml\n"
+            b"M       test_data.json\n"
+            b"M       config.yaml\n"
+            b"M       utils.py\n"
+            + b"M       README.md\n"
+        )
+        test_file_convention = ["test_*.py", "*_test.py"]
+
+        with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+            subprocess_mock.return_value.stdout = raw_output
+            mode = Branch(test_file_convention)
+            files, folders = mode.affected_tests()
+
+        # Only Python test files should be included
+        expected_files = ["test_example.py"]
         expected_folders = []
 
         assert files == expected_files

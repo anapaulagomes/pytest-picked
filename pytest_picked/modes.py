@@ -22,7 +22,7 @@ class Mode(ABC):
             if file_or_folder:
                 if file_or_folder.endswith("/"):
                     folders.append(file_or_folder)
-                elif re.search(re_string, file_or_folder):
+                elif file_or_folder.endswith(".py") and re.search(re_string, file_or_folder):
                     files.append(file_or_folder)
         return files, folders
 
