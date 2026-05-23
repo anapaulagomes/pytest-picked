@@ -1,5 +1,10 @@
 on: pull_request
 
+# Grant the workflow permission to write pull request data so the changelog
+# reminder action can access and comment on the pull request.
+permissions:
+  pull-requests: write
+
 name: Changelog Reminder
 
 jobs:
