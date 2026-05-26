@@ -69,6 +69,37 @@ def test_return_nothing_if_does_not_have_changed_test_files(testdir):
         result = testdir.runpytest("--picked")
 
         result.stdout.fnmatch_lines(["Changed test files... 0. []"])
+        assert result.ret == pytest.ExitCode.NO_TESTS_COLLECTED
+
+
+def test_exit_code_5_when_picked_only_matches_no_tests(testdir):
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        subprocess_mock.return_value.stdout = b""
+
+        testdir.makepyfile(
+            test_unrelated="""
+            def test_sth():
+                assert True
+            """,
+        )
+        result = testdir.runpytest("--picked=only")
+
+        assert result.ret == pytest.ExitCode.NO_TESTS_COLLECTED
+
+
+def test_exit_code_0_when_picked_first_with_no_changes(testdir):
+    with patch("pytest_picked.modes.subprocess.run") as subprocess_mock:
+        subprocess_mock.return_value.stdout = b""
+
+        testdir.makepyfile(
+            test_unrelated="""
+            def test_sth():
+                assert True
+            """,
+        )
+        result = testdir.runpytest("--picked=first")
+
+        assert result.ret == pytest.ExitCode.OK
 
 
 def test_return_error_if_not_git_repository(testdir):
