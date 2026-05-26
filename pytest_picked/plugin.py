@@ -1,6 +1,7 @@
 from fnmatch import fnmatch
 
 import _pytest
+import pytest
 
 from .modes import Branch, Unstaged
 
@@ -68,7 +69,12 @@ def pytest_configure(config):
 
 def pytest_collection_modifyitems(session, config, items):
     picked_type = config.getoption("picked")
-    if not picked_type or picked_type != "first":
+    if not picked_type:
+        return
+
+    if picked_type == "only":
+        if not items:
+            session.exitstatus = pytest.ExitCode.NO_TESTS_COLLECTED
         return
 
     affected_files, affected_folders = _get_affected_paths(config)
