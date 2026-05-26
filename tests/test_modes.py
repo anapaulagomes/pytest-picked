@@ -119,8 +119,7 @@ class TestBranch:
         [
             ("D       tests/migrations/auto.py", None),
             (
-                "R098    tests/test_pytest_picked.py     "
-                "tests/test_pytest_picked.py",
+                "R098    tests/test_pytest_picked.py     tests/test_pytest_picked.py",
                 "tests/test_pytest_picked.py",
             ),
             ("M       test.py", "test.py"),

@@ -34,8 +34,10 @@ class Mode(ABC):
         return " ".join(self.command())
 
     def __str__(self):
-        return "Mode: {}\nCommand: {} Parser rule: {}".format(
-            self.__class__.__name__, self.print_command(), self.parser.__doc__
+        return (
+            f"Mode: {self.__class__.__name__}\n"
+            f"Command: {self.print_command()} "
+            f"Parser rule: {self.parser.__doc__}"
         )
 
     @property
