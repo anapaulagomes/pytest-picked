@@ -6,7 +6,8 @@
 
 ### Modified
 - No longer warns when using branch mode
-- Drop support to Python 3.8 and 3.9; add support to 3.13 and 3.14-rc
+- Drop support to Python 3.8, 3.9 and 3.10; add support to 3.13 and 3.14-rc
+- Replace black, flake8 and isort with ruff for linting and formatting
 
 ## [0.5.1] - 2024-11-05
 ### Added

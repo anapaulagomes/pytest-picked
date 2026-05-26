@@ -16,8 +16,7 @@ def pytest_addoption(parser):
         nargs="?",
         const="only",
         help=(
-            "Run the tests related to the changed files either on their own, "
-            "or first"
+            "Run the tests related to the changed files either on their own, or first"
         ),
     )
     group.addoption(
@@ -49,11 +48,11 @@ def _get_affected_paths(config):
     try:
         mode = modes[picked_mode]
         options = config.option.__dict__
-    except KeyError:
+    except KeyError as err:
         error = "Invalid mode. Options: `{}`.".format(", ".join(modes.keys()))
         _write(config, [error])
         config.args = []
-        raise ValueError(error)
+        raise ValueError(error) from err
     return mode(test_file_convention, **options).affected_tests()
 
 
