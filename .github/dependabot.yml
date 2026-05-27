@@ -3,11 +3,11 @@ updates:
 - package-ecosystem: uv
   directory: "/"
   schedule:
-    interval: monthly
+    interval: semiannually
     time: "04:00"
   open-pull-requests-limit: 10
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
-    interval: monthly
+    interval: semiannually
     time: "04:00"
