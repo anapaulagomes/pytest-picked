@@ -1,12 +1,13 @@
 version: 2
 updates:
-- package-ecosystem: pip
+- package-ecosystem: uv
   directory: "/"
   schedule:
     interval: monthly
     time: "04:00"
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: tox
-    versions:
-    - 3.22.0
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: monthly
+    time: "04:00"
