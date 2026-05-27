@@ -189,8 +189,7 @@ class TestBranch:
             b"M       test_config.yml\n"
             b"M       test_data.json\n"
             b"M       config.yaml\n"
-            b"M       utils.py\n"
-            + b"M       README.md\n"
+            b"M       utils.py\n" + b"M       README.md\n"
         )
         test_file_convention = ["test_*.py", "*_test.py"]
 
