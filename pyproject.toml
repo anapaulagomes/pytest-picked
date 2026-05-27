@@ -18,7 +18,9 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
     "License :: OSI Approved :: MIT License"
 ]
-dependencies = ["pytest>=8.4.2"]
+dependencies = [
+    "pytest>=9.0.3",
+]
 
 [project.entry-points."pytest11"]
 picked = "pytest_picked.plugin"
