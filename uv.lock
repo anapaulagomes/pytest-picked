@@ -147,7 +147,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pytest", specifier = ">=8.4.2" }]
+requires-dist = [{ name = "pytest", specifier = ">=9.0.3" }]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pre-commit", specifier = ">=4.3.0" }]
