@@ -22,8 +22,10 @@ class Mode(ABC):
             if file_or_folder:
                 if file_or_folder.endswith("/"):
                     folders.append(file_or_folder)
-                elif file_or_folder.endswith(".py") and re.search(re_string, file_or_folder):
-                    files.append(file_or_folder)
+                else:
+                    matches_test_convention = re.search(re_string, file_or_folder)
+                    if file_or_folder.endswith(".py") and matches_test_convention:
+                        files.append(file_or_folder)
         return files, folders
 
     def git_output(self):
