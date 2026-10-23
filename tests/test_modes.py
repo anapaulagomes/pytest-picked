@@ -41,6 +41,9 @@ class TestUnstaged:
         "line,expected_line",
         [
             ("D  tests/migrations/auto.py", None),
+            (" D tests/test_deleted.py", None),
+            ("MD tests/test_deleted.py", None),
+            ("RD tests/test_deleted.py", None),
             ("R  tests/from-school.csv -> test_new_things.py", "test_new_things.py"),
             (
                 "R  tests/from-school.csv -> tests/test_new_things.py",
