@@ -124,10 +124,10 @@ class Unstaged(Mode):
         """
         start_path_index = 3
         rename_indicator = "-> "
-        delete_indicator = "D  "
+        delete_indicator = "D"
         deleted_and_renamed_indicator = "AD "
 
-        if candidate.startswith(delete_indicator):
+        if delete_indicator in candidate[:2]:
             return
         if candidate.startswith(deleted_and_renamed_indicator):
             return
