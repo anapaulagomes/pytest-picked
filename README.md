@@ -85,10 +85,33 @@ pip install pytest-picked
 
 ## Contributing
 
-Contributions are very welcome. Tests can be run with
-[tox](https://tox.readthedocs.io/en/latest/), so we can guarantee that it is working
-in different python versions. Also, make sure to add tests and use `pre-commit`
-before you submit a pull request.
+Contributions are very welcome. Start by forking the repository and cloning it locally to your computer.
+
+You'll need Python 3.11 or newer and [uv](https://docs.astral.sh/uv/) installed.
+
+Install the dependencies with:
+
+```bash
+uv sync
+```
+
+Tests can be run with:
+
+```bash
+uv run pytest
+```
+
+Also, make sure to add tests for any changes you make and install the pre-commit hooks:
+
+```bash
+uv run pre-commit install
+```
+
+This will run the checks automatically before each commit. You can also run them manually with:
+
+```bash
+uv run pre-commit run --all-files
+```
 
 ## License
 
