@@ -83,7 +83,6 @@ You can install `pytest-picked` via [PyPI](https://pypi.org/project/pytest-picke
 pip install pytest-picked
 ```
 
-
 ## Contributing
 
 Contributions are very welcome. Start by forking the repository and cloning it locally to your computer.
